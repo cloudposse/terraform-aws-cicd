@@ -1,20 +1,18 @@
 # Define composite variables for resources
-resource "null_resource" "default" {
-  triggers = {
-    id = "${lower(format("%v-%v-%v", var.namespace, var.stage, var.name))}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
+module "label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=init"
+  namespace = "${var.namespace}"
+  name      = "${var.name}"
+  stage     = "${var.stage}"
 }
 
+
 resource "aws_s3_bucket" "default" {
-  bucket = "${null_resource.default.triggers.id}"
+  bucket = "${module.label.value}"
   acl    = "private"
 
   tags {
-    Name      = "${null_resource.default.triggers.id}"
+    Name      = "${module.label.value}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -81,20 +79,20 @@ data "aws_iam_policy_document" "assume" {
 }
 
 resource "aws_iam_role" "default" {
-  name = "${null_resource.default.triggers.id}"
+  name = "${module.label.value}"
 
   assume_role_policy = "${data.aws_iam_policy_document.assume.json}"
 }
 
 resource "aws_iam_role_policy" "codepipeline" {
-  name   = "${null_resource.default.triggers.id}"
+  name   = "${module.label.value}"
   role   = "${aws_iam_role.default.id}"
   policy = "${data.aws_iam_policy_document.codepipeline.json}"
 }
 
 resource "aws_codepipeline" "default" {
   count    = "${var.enabled}"
-  name     = "${null_resource.default.triggers.id}"
+  name     = "${module.label.value}"
   role_arn = "${aws_iam_role.default.arn}"
 
   artifact_store {
