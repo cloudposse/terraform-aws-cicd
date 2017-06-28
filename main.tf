@@ -8,11 +8,11 @@ module "label" {
 
 
 resource "aws_s3_bucket" "default" {
-  bucket = "${module.label.value}"
+  bucket = "${module.label.id}"
   acl    = "private"
 
   tags {
-    Name      = "${module.label.value}"
+    Name      = "${module.label.id}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -79,20 +79,20 @@ data "aws_iam_policy_document" "assume" {
 }
 
 resource "aws_iam_role" "default" {
-  name = "${module.label.value}"
+  name = "${module.label.id}"
 
   assume_role_policy = "${data.aws_iam_policy_document.assume.json}"
 }
 
 resource "aws_iam_role_policy" "codepipeline" {
-  name   = "${module.label.value}"
+  name   = "${module.label.id}"
   role   = "${aws_iam_role.default.id}"
   policy = "${data.aws_iam_policy_document.codepipeline.json}"
 }
 
 resource "aws_codepipeline" "default" {
   count    = "${var.enabled}"
-  name     = "${module.label.value}"
+  name     = "${module.label.id}"
   role_arn = "${aws_iam_role.default.arn}"
 
   artifact_store {
