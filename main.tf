@@ -1,6 +1,7 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=init"
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=provider"
+  provider  = "${var.provider}"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -8,6 +9,7 @@ module "label" {
 
 
 resource "aws_s3_bucket" "default" {
+  provider  = "${var.provider}"
   bucket = "${module.label.id}"
   acl    = "private"
 
@@ -19,6 +21,7 @@ resource "aws_s3_bucket" "default" {
 }
 
 data "aws_iam_policy_document" "codepipeline" {
+  provider  = "${var.provider}"
   statement {
     sid = ""
 
@@ -62,6 +65,7 @@ data "aws_iam_policy_document" "codepipeline" {
 }
 
 data "aws_iam_policy_document" "assume" {
+  provider  = "${var.provider}"
   statement {
     sid = ""
 
@@ -79,18 +83,21 @@ data "aws_iam_policy_document" "assume" {
 }
 
 resource "aws_iam_role" "default" {
+  provider  = "${var.provider}"
   name = "${module.label.id}"
 
   assume_role_policy = "${data.aws_iam_policy_document.assume.json}"
 }
 
 resource "aws_iam_role_policy" "codepipeline" {
+  provider  = "${var.provider}"
   name   = "${module.label.id}"
   role   = "${aws_iam_role.default.id}"
   policy = "${data.aws_iam_policy_document.codepipeline.json}"
 }
 
 resource "aws_codepipeline" "default" {
+  provider  = "${var.provider}"
   count    = "${var.enabled}"
   name     = "${module.label.id}"
   role_arn = "${aws_iam_role.default.arn}"
