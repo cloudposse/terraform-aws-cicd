@@ -128,26 +128,6 @@ resource "aws_codepipeline" "default" {
   }
 
   stage {
-    name = "Build"
-
-    action {
-      name             = "Source"
-      category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
-      version          = "1"
-      output_artifacts = ["code"]
-
-      configuration {
-        OAuthToken = "${var.github_oauth_token}"
-        Owner      = "${var.repo_owner}"
-        Repo       = "${var.repo_name}"
-        Branch     = "${var.branch}"
-      }
-    }
-  }
-
-  stage {
     name = "Deploy"
 
     action {
