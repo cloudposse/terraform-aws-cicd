@@ -1,6 +1,6 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git"
+  source    = "git::https://github.com/cloudposse/tf_label.git?reg=0.1.0"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "build" {
-  source    = "git::https://github.com/cloudposse/tf_codebuild.git"
+  source    = "git::https://github.com/cloudposse/tf_codebuild.git?ref=0.1.0"
   namespace = "${var.namespace}"
   name      = "${var.name}-build"
   stage     = "${var.stage}"
