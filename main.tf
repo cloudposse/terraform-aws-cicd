@@ -6,7 +6,6 @@ module "label" {
   stage     = "${var.stage}"
 }
 
-
 resource "aws_s3_bucket" "default" {
   bucket = "${module.label.id}"
   acl    = "private"
@@ -95,6 +94,9 @@ module "build" {
   namespace = "${var.namespace}"
   name      = "${var.name}-build"
   stage     = "${var.stage}"
+
+  image         = "${var.build_image}"
+  instance_size = "${var.build_instance_size}"
 }
 
 resource "aws_codepipeline" "default" {
@@ -131,13 +133,13 @@ resource "aws_codepipeline" "default" {
     name = "Build"
 
     action {
-      name             = "Compose"
-      category         = "Build"
-      owner           = "AWS"
-      provider         = "CodeBuild"
-      version          = "1"
+      name     = "Compose"
+      category = "Build"
+      owner    = "AWS"
+      provider = "CodeBuild"
+      version  = "1"
 
-      input_artifacts = ["code"]
+      input_artifacts  = ["code"]
       output_artifacts = ["package"]
 
       configuration {
@@ -145,7 +147,6 @@ resource "aws_codepipeline" "default" {
       }
     }
   }
-
 
   stage {
     name = "Deploy"
