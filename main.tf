@@ -58,6 +58,18 @@ data "aws_iam_policy_document" "codepipeline" {
     resources = ["*"]
     effect    = "Allow"
   }
+
+  statement {
+    sid = ""
+
+    actions = [
+      "codebuild:*",
+    ]
+
+    resources = ["${module.build.project_id}"]
+    effect    = "Allow"
+  }
+
 }
 
 data "aws_iam_policy_document" "assume" {
