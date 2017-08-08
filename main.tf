@@ -93,7 +93,7 @@ resource "aws_iam_role_policy" "codepipeline" {
 module "build" {
   source    = "git::https://github.com/cloudposse/tf_codebuild.git?ref=init"
   namespace = "${var.namespace}"
-  name      = "${var.name}"
+  name      = "${var.name}-build"
   stage     = "${var.stage}"
 }
 
