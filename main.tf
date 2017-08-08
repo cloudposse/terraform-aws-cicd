@@ -133,10 +133,12 @@ resource "aws_codepipeline" "default" {
     action {
       name             = "Compose"
       category         = "Build"
-      owner            = "ThirdParty"
+      owner           = "AWS"
       provider         = "CodeBuild"
       version          = "1"
-      output_artifacts = ["code"]
+
+      input_artifacts = ["code"]
+      output_artifacts = ["package"]
 
       configuration {
         ProjectName = "${module.build.project_name}"
@@ -153,7 +155,7 @@ resource "aws_codepipeline" "default" {
       category        = "Deploy"
       owner           = "AWS"
       provider        = "ElasticBeanstalk"
-      input_artifacts = ["code"]
+      input_artifacts = ["package"]
       version         = "1"
 
       configuration {
