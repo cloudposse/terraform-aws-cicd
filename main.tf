@@ -128,6 +128,24 @@ resource "aws_codepipeline" "default" {
   }
 
   stage {
+    name = "Build"
+
+    action {
+      name             = "Compose"
+      category         = "Build"
+      owner            = "ThirdParty"
+      provider         = "CodeBuild"
+      version          = "1"
+      output_artifacts = ["code"]
+
+      configuration {
+        ProjectName = "${module.build.project_name}"
+      }
+    }
+  }
+
+
+  stage {
     name = "Deploy"
 
     action {
