@@ -131,10 +131,8 @@ data "aws_iam_policy_document" "codebuild" {
   }
 }
 
-
-
 module "build" {
-  source    = "git::https://github.com/cloudposse/tf_codebuild.git?ref=init"
+  source    = "git::https://github.com/cloudposse/tf_codebuild.git"
   namespace = "${var.namespace}"
   name      = "${var.name}-build"
   stage     = "${var.stage}"
