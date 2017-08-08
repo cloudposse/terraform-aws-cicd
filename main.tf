@@ -90,6 +90,13 @@ resource "aws_iam_role_policy" "codepipeline" {
   policy = "${data.aws_iam_policy_document.codepipeline.json}"
 }
 
+module "build" {
+  source    = "git::https://github.com/cloudposse/tf_codebuild.git?ref=init"
+  namespace = "${var.namespace}"
+  name      = "${var.name}"
+  stage     = "${var.stage}"
+}
+
 resource "aws_codepipeline" "default" {
   count    = "${var.enabled}"
   name     = "${module.label.id}"
@@ -102,6 +109,26 @@ resource "aws_codepipeline" "default" {
 
   stage {
     name = "Source"
+
+    action {
+      name             = "Source"
+      category         = "Source"
+      owner            = "ThirdParty"
+      provider         = "GitHub"
+      version          = "1"
+      output_artifacts = ["code"]
+
+      configuration {
+        OAuthToken = "${var.github_oauth_token}"
+        Owner      = "${var.repo_owner}"
+        Repo       = "${var.repo_name}"
+        Branch     = "${var.branch}"
+      }
+    }
+  }
+
+  stage {
+    name = "Build"
 
     action {
       name             = "Source"
