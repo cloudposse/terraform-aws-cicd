@@ -1,6 +1,6 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git"
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.1.0"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -10,11 +10,7 @@ resource "aws_s3_bucket" "default" {
   bucket = "${module.label.id}"
   acl    = "private"
 
-  tags {
-    Name      = "${module.label.id}"
-    Namespace = "${var.namespace}"
-    Stage     = "${var.stage}"
-  }
+  tags = "${module.label.tags}"
 }
 
 resource "aws_iam_role" "default" {
@@ -22,7 +18,6 @@ resource "aws_iam_role" "default" {
 
   assume_role_policy = "${data.aws_iam_policy_document.assume.json}"
 }
-
 
 data "aws_iam_policy_document" "assume" {
   statement {
@@ -45,7 +40,6 @@ resource "aws_iam_role_policy_attachment" "default" {
   role   = "${aws_iam_role.default.id}"
   policy_arn = "${aws_iam_policy.default.arn}"
 }
-
 
 resource "aws_iam_policy" "default" {
   name   = "${module.label.id}"
@@ -132,7 +126,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "build" {
-  source    = "git::https://github.com/cloudposse/tf_codebuild.git"
+  source    = "git::https://github.com/cloudposse/tf_codebuild.git?ref=tags/0.1.0"
   namespace = "${var.namespace}"
   name      = "${var.name}-build"
   stage     = "${var.stage}"
@@ -212,4 +206,6 @@ resource "aws_codepipeline" "default" {
       }
     }
   }
+
+  tags = "${module.label.tags}"
 }
