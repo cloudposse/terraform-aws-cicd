@@ -206,6 +206,4 @@ resource "aws_codepipeline" "default" {
       }
     }
   }
-
-  tags = "${module.label.tags}"
 }
