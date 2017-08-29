@@ -127,13 +127,15 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "build" {
-  source    = "git::https://github.com/cloudposse/tf_codebuild.git?ref=tags/0.1.0"
-  namespace = "${var.namespace}"
-  name      = "${var.name}-build"
-  stage     = "${var.stage}"
-
+  source        = "git::https://github.com/cloudposse/tf_codebuild.git?ref=tags/0.3.0"
+  namespace     = "${var.namespace}"
+  name          = "${var.name}-build"
+  stage         = "${var.stage}"
   image         = "${var.build_image}"
   instance_size = "${var.build_instance_size}"
+  delimiter     = "${var.delimiter}"
+  attributes    = "${var.attributes}"
+  tags          = "${var.tags}"
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
