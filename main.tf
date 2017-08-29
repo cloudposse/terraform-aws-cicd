@@ -129,12 +129,12 @@ data "aws_iam_policy_document" "codebuild" {
 module "build" {
   source        = "git::https://github.com/cloudposse/tf_codebuild.git?ref=tags/0.3.0"
   namespace     = "${var.namespace}"
-  name          = "${var.name}-build"
+  name          = "${var.name}"
   stage         = "${var.stage}"
   image         = "${var.build_image}"
   instance_size = "${var.build_instance_size}"
   delimiter     = "${var.delimiter}"
-  attributes    = "${var.attributes}"
+  attributes    = "${lower(join(var.delimiter, compact(concat(var.attributes, list("build")))))}"
   tags          = "${var.tags}"
 }
 
