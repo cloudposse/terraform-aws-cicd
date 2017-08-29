@@ -134,7 +134,7 @@ module "build" {
   image         = "${var.build_image}"
   instance_size = "${var.build_instance_size}"
   delimiter     = "${var.delimiter}"
-  attributes    = "${lower(join(var.delimiter, compact(concat(var.attributes, list("build")))))}"
+  attributes    = "${concat(var.attributes, list("build"))}"
   tags          = "${var.tags}"
 }
 
