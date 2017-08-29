@@ -33,3 +33,18 @@ variable "build_image" {
 variable "build_instance_size" {
   default = "BUILD_GENERAL1_SMALL"
 }
+
+variable "delimiter" {
+  type    = "string"
+  default = "-"
+}
+
+variable "attributes" {
+  type    = "list"
+  default = []
+}
+
+variable "tags" {
+  type    = "map"
+  default = {}
+}

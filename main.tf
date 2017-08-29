@@ -1,9 +1,12 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.1.0"
-  namespace = "${var.namespace}"
-  name      = "${var.name}"
-  stage     = "${var.stage}"
+  source     = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.2.0"
+  namespace  = "${var.namespace}"
+  name       = "${var.name}"
+  stage      = "${var.stage}"
+  delimiter  = "${var.delimiter}"
+  attributes = "${var.attributes}"
+  tags       = "${var.tags}"
 }
 
 resource "aws_s3_bucket" "default" {
@@ -14,8 +17,7 @@ resource "aws_s3_bucket" "default" {
 }
 
 resource "aws_iam_role" "default" {
-  name = "${module.label.id}"
-
+  name               = "${module.label.id}"
   assume_role_policy = "${data.aws_iam_policy_document.assume.json}"
 }
 
@@ -37,7 +39,7 @@ data "aws_iam_policy_document" "assume" {
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  role   = "${aws_iam_role.default.id}"
+  role       = "${aws_iam_role.default.id}"
   policy_arn = "${aws_iam_policy.default.arn}"
 }
 
@@ -71,7 +73,7 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3" {
-  role   = "${aws_iam_role.default.id}"
+  role       = "${aws_iam_role.default.id}"
   policy_arn = "${aws_iam_policy.s3.arn}"
 }
 
@@ -102,10 +104,9 @@ data "aws_iam_policy_document" "s3" {
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild" {
-  role   = "${aws_iam_role.default.id}"
+  role       = "${aws_iam_role.default.id}"
   policy_arn = "${aws_iam_policy.codebuild.arn}"
 }
-
 
 resource "aws_iam_policy" "codebuild" {
   name   = "${module.label.id}-codebuild"
@@ -136,7 +137,7 @@ module "build" {
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
-  role   = "${module.build.role_arn}"
+  role       = "${module.build.role_arn}"
   policy_arn = "${aws_iam_policy.s3.arn}"
 }
 
