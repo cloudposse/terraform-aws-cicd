@@ -31,7 +31,7 @@ variable "build_image" {
   description = "Docker image for build environment, e.g. 'aws/codebuild/docker:1.12.1' or 'aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0'. For more info: http://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html"
 }
 
-variable "build_instance_size" {
+variable "build_compute_type" {
   default = "BUILD_GENERAL1_SMALL"
 }
 

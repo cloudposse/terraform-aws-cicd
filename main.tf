@@ -1,3 +1,9 @@
+data "aws_caller_identity" "default" {}
+
+data "aws_region" "default" {
+  current = true
+}
+
 # Define composite variables for resources
 module "label" {
   source     = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.2.0"
@@ -12,8 +18,7 @@ module "label" {
 resource "aws_s3_bucket" "default" {
   bucket = "${module.label.id}"
   acl    = "private"
-
-  tags = "${module.label.tags}"
+  tags   = "${module.label.tags}"
 }
 
 resource "aws_iam_role" "default" {
@@ -127,15 +132,20 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "build" {
-  source        = "git::https://github.com/cloudposse/tf_codebuild.git?ref=tags/0.5.0"
-  namespace     = "${var.namespace}"
-  name          = "${var.name}"
-  stage         = "${var.stage}"
-  image         = "${var.build_image}"
-  instance_size = "${var.build_instance_size}"
-  delimiter     = "${var.delimiter}"
-  attributes    = "${concat(var.attributes, list("build"))}"
-  tags          = "${var.tags}"
+  source             = "git::https://github.com/cloudposse/tf_codebuild.git?ref=tags/0.5.0"
+  namespace          = "${var.namespace}"
+  name               = "${var.name}"
+  stage              = "${var.stage}"
+  build_image        = "${var.build_image}"
+  build_compute_type = "${var.build_compute_type}"
+  delimiter          = "${var.delimiter}"
+  attributes         = "${concat(var.attributes, list("build"))}"
+  tags               = "${var.tags}"
+  privileged_mode    = "${var.privileged_mode}"
+  aws_region         = "${signum(length(var.aws_region)) == 1 ? var.aws_region : data.aws_region.default.name}"
+  aws_account_id     = "${signum(length(var.aws_account_id)) == 1 ? var.aws_account_id : data.aws_caller_identity.default.account_id}"
+  image_repo_name    = "${var.image_repo_name}"
+  image_tag          = "${var.image_tag}"
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
