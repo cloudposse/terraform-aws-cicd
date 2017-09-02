@@ -7,7 +7,7 @@ variable "stage" {
 }
 
 variable "name" {
-  default = "deploy"
+  default = "app"
 }
 
 variable "enabled" {
