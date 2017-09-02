@@ -177,7 +177,7 @@ resource "aws_codepipeline" "default" {
     name = "Build"
 
     action {
-      name     = "Compose"
+      name     = "Build"
       category = "Build"
       owner    = "AWS"
       provider = "CodeBuild"
