@@ -138,6 +138,7 @@ module "build" {
   stage              = "${var.stage}"
   build_image        = "${var.build_image}"
   build_compute_type = "${var.build_compute_type}"
+  buildspec          = "${var.buildspec}"
   delimiter          = "${var.delimiter}"
   attributes         = "${concat(var.attributes, list("build"))}"
   tags               = "${var.tags}"

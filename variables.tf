@@ -35,6 +35,11 @@ variable "build_compute_type" {
   default = "BUILD_GENERAL1_SMALL"
 }
 
+variable "buildspec" {
+  default     = ""
+  description = "Optional buildspec declaration to use for building the project"
+}
+
 variable "delimiter" {
   type    = "string"
   default = "-"
