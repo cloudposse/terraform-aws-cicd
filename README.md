@@ -144,13 +144,13 @@ CMD [ "npm", "start" ]
 ## Input
 
 | Name                | Default                      | Description                                                                                                                                                        |
-|:-------------------:|:----------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|:-------------------:|:----------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | namespace           | global                       | Namespace                                                                                                                                                          |
 | stage               | default                      | Stage                                                                                                                                                              |
 | name                | app                          | Name                                                                                                                                                               |
 | enabled             | true                         | Enable building and deploying automatically after pushing to the GitHub branch. If disabled, ``CodePipeline`` could be activated manually                          |
-| app                 | ""                           | Elastic Beanstalk application name                                                                                                                                 |
-| env                 | ""                           | Elastic Beanstalk environment name                                                                                                                                 |
+| app                 | ""                           | (Optional) Elastic Beanstalk application name. If not provided or set to empty string, the ``Deployment`` stage of the pipeline will not be created                |
+| env                 | ""                           | (Optional) Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deployment`` stage of the pipeline will not be created                |
 | github_oauth_token  | ""                           | GitHub Oauth Token with permissions to access private repositories                                                                                                 |
 | repo_owner          | ""                           | GitHub Organization or Person name                                                                                                                                 |
 | repo_name           | ""                           | GitHub repository name of the application to be built and deployed to Elastic Beanstalk                                                                            |
