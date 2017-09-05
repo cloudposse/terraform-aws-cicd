@@ -11,12 +11,18 @@ variable "name" {
 }
 
 variable "enabled" {
-  default = 1
+  default = true
 }
 
-variable "app" {}
+variable "app" {
+  type    = "string"
+  default = ""
+}
 
-variable "env" {}
+variable "env" {
+  type    = "string"
+  default = ""
+}
 
 variable "github_oauth_token" {}
 

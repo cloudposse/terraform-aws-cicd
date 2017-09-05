@@ -154,8 +154,8 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
   policy_arn = "${aws_iam_policy.s3.arn}"
 }
 
-resource "aws_codepipeline" "default" {
-  count    = "${var.enabled}"
+resource "aws_codepipeline" "source_build_deploy" {
+  count    = "${var.enabled == true && signum(length(var.app)) == 1 && signum(length(var.env)) == 1 ? 1 : 0}"
   name     = "${module.label.id}"
   role_arn = "${aws_iam_role.default.arn}"
 
@@ -217,6 +217,56 @@ resource "aws_codepipeline" "default" {
       configuration {
         ApplicationName = "${var.app}"
         EnvironmentName = "${var.env}"
+      }
+    }
+  }
+}
+
+resource "aws_codepipeline" "source_build" {
+  count    = "${var.enabled == false || signum(length(var.app)) == 0 || signum(length(var.env)) == 0 ? 0 : 1}"
+  name     = "${module.label.id}"
+  role_arn = "${aws_iam_role.default.arn}"
+
+  artifact_store {
+    location = "${aws_s3_bucket.default.bucket}"
+    type     = "S3"
+  }
+
+  stage {
+    name = "Source"
+
+    action {
+      name             = "Source"
+      category         = "Source"
+      owner            = "ThirdParty"
+      provider         = "GitHub"
+      version          = "1"
+      output_artifacts = ["code"]
+
+      configuration {
+        OAuthToken = "${var.github_oauth_token}"
+        Owner      = "${var.repo_owner}"
+        Repo       = "${var.repo_name}"
+        Branch     = "${var.branch}"
+      }
+    }
+  }
+
+  stage {
+    name = "Build"
+
+    action {
+      name     = "Build"
+      category = "Build"
+      owner    = "AWS"
+      provider = "CodeBuild"
+      version  = "1"
+
+      input_artifacts  = ["code"]
+      output_artifacts = ["package"]
+
+      configuration {
+        ProjectName = "${module.build.project_name}"
       }
     }
   }
