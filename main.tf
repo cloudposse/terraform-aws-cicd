@@ -154,8 +154,21 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
   policy_arn = "${aws_iam_policy.s3.arn}"
 }
 
-resource "aws_codepipeline" "default" {
-  count    = "${var.enabled}"
+
+# Only one of the `aws_codepipeline` resources below will be created:
+
+# "source_build_deploy" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name and environment name are specified
+# This is used in two use-cases:
+# 1. GitHub -> S3 -> Elastic Beanstalk (running application stack like Node, Go, Java, IIS, Python)
+# 2. GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)
+
+# "source_build" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name or environment name are not specified
+# This is used in this use-case:
+# 1. GitHub -> ECR (Docker image)
+
+resource "aws_codepipeline" "source_build_deploy" {
+  # Elastic Beanstalk application name and environment name are specified
+  count    = "${var.enabled && signum(length(var.app)) == 1 && signum(length(var.env)) == 1 ? 1 : 0}"
   name     = "${module.label.id}"
   role_arn = "${aws_iam_role.default.arn}"
 
@@ -217,6 +230,57 @@ resource "aws_codepipeline" "default" {
       configuration {
         ApplicationName = "${var.app}"
         EnvironmentName = "${var.env}"
+      }
+    }
+  }
+}
+
+resource "aws_codepipeline" "source_build" {
+  # Elastic Beanstalk application name or environment name are not specified
+  count    = "${var.enabled && (signum(length(var.app)) == 0 || signum(length(var.env)) == 0) ? 1 : 0}"
+  name     = "${module.label.id}"
+  role_arn = "${aws_iam_role.default.arn}"
+
+  artifact_store {
+    location = "${aws_s3_bucket.default.bucket}"
+    type     = "S3"
+  }
+
+  stage {
+    name = "Source"
+
+    action {
+      name             = "Source"
+      category         = "Source"
+      owner            = "ThirdParty"
+      provider         = "GitHub"
+      version          = "1"
+      output_artifacts = ["code"]
+
+      configuration {
+        OAuthToken = "${var.github_oauth_token}"
+        Owner      = "${var.repo_owner}"
+        Repo       = "${var.repo_name}"
+        Branch     = "${var.branch}"
+      }
+    }
+  }
+
+  stage {
+    name = "Build"
+
+    action {
+      name     = "Build"
+      category = "Build"
+      owner    = "AWS"
+      provider = "CodeBuild"
+      version  = "1"
+
+      input_artifacts  = ["code"]
+      output_artifacts = ["package"]
+
+      configuration {
+        ProjectName = "${module.build.project_name}"
       }
     }
   }
