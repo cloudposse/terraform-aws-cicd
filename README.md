@@ -5,36 +5,25 @@ Terraform module to create AWS `CodePipeline` with `CodeBuild` for CI/CD
 
 This module supports three use-cases:
 
-1. GitHub -> S3 (build artifact) -> Elastic Beanstalk (running application stack like Node, Go, Java, IIS, Python)
-2. GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)
-3. GitHub -> ECR (Docker image)
+1. **GitHub -> S3 (build artifact) -> Elastic Beanstalk (running application stack)**.  
+The module gets the code from a ``GitHub`` repository (public or private), builds it by executing the ``buildspec.yml`` file from the repository, pushes the built artifact to an S3 bucket, 
+and deploys the artifact to ``Elastic Beanstalk`` running one of the supported stacks (_e.g._ ``Java``, ``Go``, ``Node``, ``IIS``, ``Python``, ``Ruby``, etc.).
+    - http://docs.aws.amazon.com/codebuild/latest/userguide/sample-maven-5m.html  
+    - http://docs.aws.amazon.com/codebuild/latest/userguide/sample-nodejs-hw.html  
+    - http://docs.aws.amazon.com/codebuild/latest/userguide/sample-go-hw.html  
 
 
-Here is the description of the three use-cases:
-
-1. The module gets the code from a ``GitHub`` repository (public or private), builds it by executing the ``buildspec.yml`` file from the repository, pushes the built artifact to an S3 bucket, 
-and deploys the artifact to ``Elastic Beanstalk`` running any of the supported stacks (_e.g._ ``Java``, ``Go``, ``Node``, ``IIS``, ``Python``, ``Ruby``, etc.).
-
-> For more info:  
-http://docs.aws.amazon.com/codebuild/latest/userguide/sample-maven-5m.html  
-http://docs.aws.amazon.com/codebuild/latest/userguide/sample-nodejs-hw.html  
-http://docs.aws.amazon.com/codebuild/latest/userguide/sample-go-hw.html  
-
-
-2. The module gets the code from a ``GitHub`` repository, builds a ``Docker`` image from it by executing the ``buildspec.yml`` and ``Dockerfile`` files from the repository, 
+2. **GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)**.  
+The module gets the code from a ``GitHub`` repository, builds a ``Docker`` image from it by executing the ``buildspec.yml`` and ``Dockerfile`` files from the repository, 
 pushes the ``Docker`` image to an ``ECR`` repository, and deploys the ``Docker`` image to ``Elastic Beanstalk`` running ``Docker`` stack.
-
-> For more info:  
-http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
+    - http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
 
 
-3. The module gets the code from a ``GitHub`` repository, builds a ``Docker`` image from it by executing the ``buildspec.yml`` and ``Dockerfile`` files from the repository, 
+3. **GitHub -> ECR (Docker image)**.  
+The module gets the code from a ``GitHub`` repository, builds a ``Docker`` image from it by executing the ``buildspec.yml`` and ``Dockerfile`` files from the repository, 
 and pushes the ``Docker`` image to an ``ECR`` repository. This is used when we want to build a ``Docker`` image from the code and push it to ``ECR`` without deploying to ``Elastic Beanstalk``.
 To activate this mode, don't specify the ``app`` and ``env`` attributes for the module.
-
-> For more info:  
-http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
-
+    - http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
 
 
 ## Usage
@@ -48,8 +37,7 @@ module "build" {
     name                = "app"
     stage               = "staging"
 
-    # Enable building and deploying automatically after pushing to the GitHub branch
-    # If disabled, ``CodePipeline`` could be activated manually from the AWS console
+    # Enable the pipeline creation
     enabled             = true
     
     # Elastic Beanstalk
@@ -80,8 +68,12 @@ module "build" {
 ```
 
 
-For use-case #1 above, the ``buildspec.yml`` file could look like this 
-> This is an example to build a Node app  
+### Example: GitHub, NodeJS, S3 and EB 
+
+This is an example to build a Node app, store the build artifact to an S3 bucket, and then deploy it to Elastic Beanstalk running ``Node`` stack  
+
+
+``buildspec.yml`` file 
 
 ```
 version: 0.2
@@ -110,8 +102,13 @@ artifacts:
 ```  
 
 
-For use-cases #2 and #3, the ``buildspec.yml`` file looks like this:  
-> This is an example to build a ``Docker`` image for a Node app, push the ``Docker`` image to an ECR repository, and then deploy it to Elastic Beanstalk running ``Docker`` stack  
+### Example: GitHub, NodeJS, Docker, ECR and EB 
+
+This is an example to build a ``Docker`` image for a Node app, push the ``Docker`` image to an ECR repository, and then deploy it to Elastic Beanstalk running ``Docker`` stack
+
+
+``buildspec.yml`` file 
+
 
 ```
 version: 0.2
@@ -137,7 +134,7 @@ artifacts:
     - '**/*'
 ```
 
-and the ``Dockefile`` might look similar to this:
+``Dockefile``
 
 ```
 FROM node:latest
@@ -152,28 +149,27 @@ EXPOSE 8081
 CMD [ "npm", "start" ]
 
 ```
-<br>
 
 
 ## Input
 
-| Name                | Default                      | Description                                                                                                                                                        |
-|:-------------------:|:----------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| namespace           | global                       | Namespace                                                                                                                                                          |
-| stage               | default                      | Stage                                                                                                                                                              |
-| name                | app                          | Name                                                                                                                                                               |
-| enabled             | true                         | Enable building and deploying automatically after pushing to the GitHub branch. If disabled, ``CodePipeline`` could be activated manually                          |
-| app                 | ""                           | (Optional) Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                    |
-| env                 | ""                           | (Optional) Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                    |
-| github_oauth_token  | ""                           | GitHub Oauth Token with permissions to access private repositories                                                                                                 |
-| repo_owner          | ""                           | GitHub Organization or Person name                                                                                                                                 |
-| repo_name           | ""                           | GitHub repository name of the application to be built and deployed to Elastic Beanstalk                                                                            |
-| branch              | ""                           | Branch of the GitHub repository, _e.g._ ``master``                                                                                                                 |
-| build_image         | aws/codebuild/docker:1.12.1  | Docker image for build environment, _e.g._ `aws/codebuild/docker:1.12.1` or `aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0`                                  |
-| build_compute_type  | BUILD_GENERAL1_SMALL         | `CodeBuild` instance size.  Possible values are: ```BUILD_GENERAL1_SMALL``` ```BUILD_GENERAL1_MEDIUM``` ```BUILD_GENERAL1_LARGE```                                 |
-| buildspec           | ""                           | (Optional) `buildspec` declaration to use for building the project. http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html                      |
-| privileged_mode     | ""                           | (Optional) If set to true, enables running the Docker daemon inside a Docker container on the `CodeBuild` instance. Used when building Docker images               |
-| aws_region          | ""                           | (Optional) AWS Region, _e.g._ `us-east-1`. Used as `CodeBuild` ENV variable ``$AWS_REGION`` when building Docker images                                            |
-| aws_account_id      | ""                           | (Optional) AWS Account ID. Used as `CodeBuild` ENV variable ``$AWS_ACCOUNT_ID`` when building Docker images                                                        |
-| image_repo_name     | ""                           | (Optional) ECR repository name to store the Docker image built by this module. Used as `CodeBuild` ENV variable ``$IMAGE_REPO_NAME`` when building Docker images   |
-| image_tag           | ""                           | (Optional) Docker image tag in the ECR repository, _e.g._ `latest`. Used as `CodeBuild` ENV variable ``$IMAGE_TAG`` when building Docker images                    |
+| Name                | Default                      | Description                                                                                                                                                     |
+|:--------------------|:----------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| namespace           | global                       | Namespace                                                                                                                                                       |
+| stage               | default                      | Stage                                                                                                                                                           |
+| name                | app                          | Name                                                                                                                                                            |
+| enabled             | true                         | Enable ``CodePipeline`` creation                                                                                                                                |
+| app                 | ""                           | (Optional) Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
+| env                 | ""                           | (Optional) Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
+| github_oauth_token  | ""                           | GitHub Oauth Token with permissions to access private repositories                                                                                              |
+| repo_owner          | ""                           | GitHub Organization or Person name                                                                                                                              |
+| repo_name           | ""                           | GitHub repository name of the application to be built (and deployed to Elastic Beanstalk if configured)                                                         |
+| branch              | ""                           | Branch of the GitHub repository, _e.g._ ``master``                                                                                                              |
+| build_image         | aws/codebuild/docker:1.12.1  | Docker image for build environment, _e.g._ `aws/codebuild/docker:1.12.1` or `aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0`                               |
+| build_compute_type  | BUILD_GENERAL1_SMALL         | `CodeBuild` instance size.  Possible values are: ```BUILD_GENERAL1_SMALL``` ```BUILD_GENERAL1_MEDIUM``` ```BUILD_GENERAL1_LARGE```                              |
+| buildspec           | ""                           | (Optional) `buildspec` declaration to use for building the project. http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html                   |
+| privileged_mode     | ""                           | (Optional) If set to true, enables running the Docker daemon inside a Docker container on the `CodeBuild` instance. Used when building Docker images            |
+| aws_region          | ""                           | (Optional) AWS Region, _e.g._ `us-east-1`. Used as `CodeBuild` ENV variable ``$AWS_REGION`` when building Docker images                                         |
+| aws_account_id      | ""                           | (Optional) AWS Account ID. Used as `CodeBuild` ENV variable ``$AWS_ACCOUNT_ID`` when building Docker images                                                     |
+| image_repo_name     | ""                           | (Optional) ECR repository name to store the Docker image built by the module. Used as `CodeBuild` ENV variable ``$IMAGE_REPO_NAME`` when building Docker images |
+| image_tag           | ""                           | (Optional) Docker image tag in the ECR repository, _e.g._ `latest`. Used as `CodeBuild` ENV variable ``$IMAGE_TAG`` when building Docker images                 |
