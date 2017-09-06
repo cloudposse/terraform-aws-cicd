@@ -3,11 +3,17 @@
 
 Terraform module to create AWS `CodePipeline` with `CodeBuild` for CI/CD
 
+This module supports three use-cases:
 
-This module can do the following:
+1. GitHub -> S3 (build artifact) -> Elastic Beanstalk (running application stack like Node, Go, Java, IIS, Python)
+2. GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)
+3. GitHub -> ECR (Docker image)
 
-1. Get a GitHub repository (public or private), build it by executing the ``buildspec.yml`` file from the repository, push the built artifact to an S3 bucket, 
-and deploy the artifact to ``Elastic Beanstalk`` running any of the supported stacks (_e.g._ ``Java``, ``Go``, ``Node``, ``IIS``, ``Python``, ``Ruby``, etc.)
+
+Here is the description of the three use-cases:
+
+1. The module gets the code from a ``GitHub`` repository (public or private), builds it by executing the ``buildspec.yml`` file from the repository, pushes the built artifact to an S3 bucket, 
+and deploys the artifact to ``Elastic Beanstalk`` running any of the supported stacks (_e.g._ ``Java``, ``Go``, ``Node``, ``IIS``, ``Python``, ``Ruby``, etc.).
 
 > For more info:  
 http://docs.aws.amazon.com/codebuild/latest/userguide/sample-maven-5m.html  
@@ -15,8 +21,16 @@ http://docs.aws.amazon.com/codebuild/latest/userguide/sample-nodejs-hw.html
 http://docs.aws.amazon.com/codebuild/latest/userguide/sample-go-hw.html  
 
 
-2. Get a ``GitHub`` repository, build a ``Docker`` image from it by executing the ``buildspec.yml`` and ``Dockerfile`` files from the repository, 
-push the ``Docker`` image to an ``ECR`` repository, and deploy the ``Docker`` image to ``Elastic Beanstalk`` running ``Docker`` stack
+2. The module gets the code from a ``GitHub`` repository, builds a ``Docker`` image from it by executing the ``buildspec.yml`` and ``Dockerfile`` files from the repository, 
+pushes the ``Docker`` image to an ``ECR`` repository, and deploys the ``Docker`` image to ``Elastic Beanstalk`` running ``Docker`` stack.
+
+> For more info:  
+http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
+
+
+3. The module gets the code from a ``GitHub`` repository, builds a ``Docker`` image from it by executing the ``buildspec.yml`` and ``Dockerfile`` files from the repository, 
+and pushes the ``Docker`` image to an ``ECR`` repository. This is used when we want to build a ``Docker`` image from the code and push it to ``ECR`` without deploying to ``Elastic Beanstalk``.
+To activate this mode, don't specify the ``app`` and ``env`` attributes for the module.
 
 > For more info:  
 http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
@@ -39,8 +53,8 @@ module "build" {
     enabled             = true
     
     # Elastic Beanstalk
-    app                 = "<Elastic Beanstalk application name>"
-    env                 = "<Elastic Beanstalk environment name>"
+    app                 = "<(Optional) Elastic Beanstalk application name>"
+    env                 = "<(Optional) Elastic Beanstalk environment name>"
     
     # Application repository on GitHub
     github_oauth_token  = "<GitHub Oauth Token with permissions to access private repositories>"
@@ -96,7 +110,7 @@ artifacts:
 ```  
 
 
-For use-case #2 above, the ``buildspec.yml`` file looks like this  
+For use-cases #2 and #3, the ``buildspec.yml`` file looks like this:  
 > This is an example to build a ``Docker`` image for a Node app, push the ``Docker`` image to an ECR repository, and then deploy it to Elastic Beanstalk running ``Docker`` stack  
 
 ```
@@ -123,7 +137,7 @@ artifacts:
     - '**/*'
 ```
 
-and the ``Dockefile``
+and the ``Dockefile`` might look similar to this:
 
 ```
 FROM node:latest

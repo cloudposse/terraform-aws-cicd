@@ -159,8 +159,8 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 
 # "source_build_deploy" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name and environment name are specified
 # This is used in two use-cases:
-# 1. GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)
-# 2. GitHub -> S3 -> Elastic Beanstalk (running application stack like Node, Go, Java, IIS, Python)
+# 1. GitHub -> S3 -> Elastic Beanstalk (running application stack like Node, Go, Java, IIS, Python)
+# 2. GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)
 
 # "source_build" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name or environment name are not specified
 # This is used in this use-case:
