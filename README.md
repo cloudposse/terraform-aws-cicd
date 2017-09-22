@@ -1,7 +1,7 @@
-# tf_cicd
+# terraform-aws-cicd
 
 
-Terraform module to create AWS `CodePipeline` with `CodeBuild` for CI/CD
+Terraform module to create AWS [`CodePipeline`](https://aws.amazon.com/codepipeline/) with [`CodeBuild`](https://aws.amazon.com/codebuild/) for [`CI/CD`](https://en.wikipedia.org/wiki/CI/CD)
 
 This module supports three use-cases:
 
@@ -30,7 +30,7 @@ To activate this mode, don't specify the ``app`` and ``env`` attributes for the 
 
 Include this repository as a module in your existing terraform code:
 
-```
+```hcl
 module "build" {
     source              = "git::https://github.com/cloudposse/tf_cicd.git?ref=tags/0.3.0"
     namespace           = "global"
@@ -38,7 +38,7 @@ module "build" {
     stage               = "staging"
 
     # Enable the pipeline creation
-    enabled             = true
+    enabled             = "true"
     
     # Elastic Beanstalk
     app                 = "<(Optional) Elastic Beanstalk application name>"
@@ -59,7 +59,7 @@ module "build" {
     # For more info:
     # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
     # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html    
-    privileged_mode     = true
+    privileged_mode     = "true"
     aws_region          = "us-east-1"
     aws_account_id      = "xxxxxxxxxx"
     image_repo_name     = "ecr-repo-name"
@@ -75,7 +75,7 @@ This is an example to build a Node app, store the build artifact to an S3 bucket
 
 ``buildspec.yml`` file 
 
-```
+```yaml
 version: 0.2
 
 phases:
@@ -110,7 +110,7 @@ This is an example to build a ``Docker`` image for a Node app, push the ``Docker
 ``buildspec.yml`` file 
 
 
-```
+```yaml
 version: 0.2
 
 phases:
@@ -136,7 +136,7 @@ artifacts:
 
 ``Dockefile``
 
-```
+```dockerfile
 FROM node:latest
 
 WORKDIR /usr/src/app
@@ -173,3 +173,8 @@ CMD [ "npm", "start" ]
 | aws_account_id      | ""                           | (Optional) AWS Account ID. Used as `CodeBuild` ENV variable ``$AWS_ACCOUNT_ID`` when building Docker images                                                     |
 | image_repo_name     | ""                           | (Optional) ECR repository name to store the Docker image built by the module. Used as `CodeBuild` ENV variable ``$IMAGE_REPO_NAME`` when building Docker images |
 | image_tag           | ""                           | (Optional) Docker image tag in the ECR repository, _e.g._ `latest`. Used as `CodeBuild` ENV variable ``$IMAGE_TAG`` when building Docker images                 |
+
+
+## License
+
+Apache 2 License. See [`LICENSE`](LICENSE) for full details.

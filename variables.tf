@@ -11,7 +11,7 @@ variable "name" {
 }
 
 variable "enabled" {
-  default = true
+  default = "true"
 }
 
 variable "app" {
@@ -62,7 +62,7 @@ variable "tags" {
 }
 
 variable "privileged_mode" {
-  default     = false
+  default     = "false"
   description = "(Optional) If set to true, enables running the Docker daemon inside a Docker container on the CodeBuild instance. Used when building Docker images"
 }
 
