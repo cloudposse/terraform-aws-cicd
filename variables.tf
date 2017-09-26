@@ -46,6 +46,11 @@ variable "buildspec" {
   description = "Optional buildspec declaration to use for building the project"
 }
 
+variable "poll_source_changes" {
+  default = true
+  description = "Periodically check the location of your source content and run the pipeline if changes are detected"
+}
+
 variable "delimiter" {
   type    = "string"
   default = "-"

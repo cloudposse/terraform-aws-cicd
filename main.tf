@@ -157,12 +157,17 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 # Only one of the `aws_codepipeline` resources below will be created:
 
 # "source_build_deploy" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name and environment name are specified
+
 # This is used in two use-cases:
+
 # 1. GitHub -> S3 -> Elastic Beanstalk (running application stack like Node, Go, Java, IIS, Python)
+
 # 2. GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)
 
 # "source_build" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name or environment name are not specified
+
 # This is used in this use-case:
+
 # 1. GitHub -> ECR (Docker image)
 
 resource "aws_codepipeline" "source_build_deploy" {
@@ -188,10 +193,11 @@ resource "aws_codepipeline" "source_build_deploy" {
       output_artifacts = ["code"]
 
       configuration {
-        OAuthToken = "${var.github_oauth_token}"
-        Owner      = "${var.repo_owner}"
-        Repo       = "${var.repo_name}"
-        Branch     = "${var.branch}"
+        OAuthToken           = "${var.github_oauth_token}"
+        Owner                = "${var.repo_owner}"
+        Repo                 = "${var.repo_name}"
+        Branch               = "${var.branch}"
+        PollForSourceChanges = "${var.poll_source_changes}"
       }
     }
   }
@@ -257,10 +263,11 @@ resource "aws_codepipeline" "source_build" {
       output_artifacts = ["code"]
 
       configuration {
-        OAuthToken = "${var.github_oauth_token}"
-        Owner      = "${var.repo_owner}"
-        Repo       = "${var.repo_name}"
-        Branch     = "${var.branch}"
+        OAuthToken           = "${var.github_oauth_token}"
+        Owner                = "${var.repo_owner}"
+        Repo                 = "${var.repo_name}"
+        Branch               = "${var.branch}"
+        PollForSourceChanges = "${var.poll_source_changes}"
       }
     }
   }
