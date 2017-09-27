@@ -32,7 +32,7 @@ Include this repository as a module in your existing terraform code:
 
 ```hcl
 module "build" {
-    source              = "git::https://github.com/cloudposse/tf_cicd.git?ref=tags/0.3.0"
+    source              = "git::https://github.com/cloudposse/terraform-aws-cicd.git?ref=master"
     namespace           = "global"
     name                = "app"
     stage               = "staging"
@@ -45,7 +45,7 @@ module "build" {
     env                 = "<(Optional) Elastic Beanstalk environment name>"
     
     # Application repository on GitHub
-    github_oauth_token  = "<GitHub Oauth Token with permissions to access private repositories>"
+    github_oauth_token  = "(Optional) <GitHub Oauth Token with permissions to access private repositories>"
     repo_owner          = "<GitHub Organization or Person name>"
     repo_name           = "<GitHub repository name of the application to be built and deployed to Elastic Beanstalk>"
     branch              = "<Branch of the GitHub repository>"
@@ -161,7 +161,7 @@ CMD [ "npm", "start" ]
 | enabled             | true                         | Enable ``CodePipeline`` creation                                                                                                                                |
 | app                 | ""                           | (Optional) Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
 | env                 | ""                           | (Optional) Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
-| github_oauth_token  | ""                           | GitHub Oauth Token with permissions to access private repositories                                                                                              |
+| github_oauth_token  | ""                           | (Optional) GitHub Oauth Token with permissions to access private repositories                                                                                   |
 | repo_owner          | ""                           | GitHub Organization or Person name                                                                                                                              |
 | repo_name           | ""                           | GitHub repository name of the application to be built (and deployed to Elastic Beanstalk if configured)                                                         |
 | branch              | ""                           | Branch of the GitHub repository, _e.g._ ``master``                                                                                                              |
