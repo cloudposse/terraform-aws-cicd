@@ -46,8 +46,11 @@ variable "buildspec" {
   description = "Optional buildspec declaration to use for building the project"
 }
 
+# https://www.terraform.io/docs/configuration/variables.html
+# It is recommended you avoid using boolean values and use explicit strings
 variable "poll_source_changes" {
-  default = true
+  type = "string"
+  default = "true"
   description = "Periodically check the location of your source content and run the pipeline if changes are detected"
 }
 
