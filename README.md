@@ -153,26 +153,26 @@ CMD [ "npm", "start" ]
 
 ## Input
 
-| Name                | Default                      | Description                                                                                                                                                     |
-|:--------------------|:----------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| namespace           | global                       | Namespace                                                                                                                                                       |
-| stage               | default                      | Stage                                                                                                                                                           |
-| name                | app                          | Name                                                                                                                                                            |
-| enabled             | true                         | Enable ``CodePipeline`` creation                                                                                                                                |
-| app                 | ""                           | (Optional) Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
-| env                 | ""                           | (Optional) Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
-| github_oauth_token  | ""                           | (Optional) GitHub Oauth Token with permissions to access private repositories                                                                                   |
-| repo_owner          | ""                           | GitHub Organization or Person name                                                                                                                              |
-| repo_name           | ""                           | GitHub repository name of the application to be built (and deployed to Elastic Beanstalk if configured)                                                         |
-| branch              | ""                           | Branch of the GitHub repository, _e.g._ ``master``                                                                                                              |
-| build_image         | aws/codebuild/docker:1.12.1  | Docker image for build environment, _e.g._ `aws/codebuild/docker:1.12.1` or `aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0`                               |
-| build_compute_type  | BUILD_GENERAL1_SMALL         | `CodeBuild` instance size.  Possible values are: ```BUILD_GENERAL1_SMALL``` ```BUILD_GENERAL1_MEDIUM``` ```BUILD_GENERAL1_LARGE```                              |
-| buildspec           | ""                           | (Optional) `buildspec` declaration to use for building the project. http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html                   |
-| privileged_mode     | ""                           | (Optional) If set to true, enables running the Docker daemon inside a Docker container on the `CodeBuild` instance. Used when building Docker images            |
-| aws_region          | ""                           | (Optional) AWS Region, _e.g._ `us-east-1`. Used as `CodeBuild` ENV variable ``$AWS_REGION`` when building Docker images                                         |
-| aws_account_id      | ""                           | (Optional) AWS Account ID. Used as `CodeBuild` ENV variable ``$AWS_ACCOUNT_ID`` when building Docker images                                                     |
-| image_repo_name     | ""                           | (Optional) ECR repository name to store the Docker image built by the module. Used as `CodeBuild` ENV variable ``$IMAGE_REPO_NAME`` when building Docker images |
-| image_tag           | ""                           | (Optional) Docker image tag in the ECR repository, _e.g._ `latest`. Used as `CodeBuild` ENV variable ``$IMAGE_TAG`` when building Docker images                 |
+| Name                | Default                        | Description                                                                                                                                                     |
+|:--------------------|:------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| namespace           | "global"                       | Namespace                                                                                                                                                       |
+| stage               | "default"                      | Stage                                                                                                                                                           |
+| name                | "app"                          | Name                                                                                                                                                            |
+| enabled             | "true"                         | Enable ``CodePipeline`` creation                                                                                                                                |
+| app                 | ""                             | (Optional) Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
+| env                 | ""                             | (Optional) Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created                 |
+| github_oauth_token  | ""                             | (Optional) GitHub Oauth Token with permissions to access private repositories                                                                                   |
+| repo_owner          | ""                             | GitHub Organization or Person name                                                                                                                              |
+| repo_name           | ""                             | GitHub repository name of the application to be built (and deployed to Elastic Beanstalk if configured)                                                         |
+| branch              | ""                             | Branch of the GitHub repository, _e.g._ ``master``                                                                                                              |
+| build_image         | "aws/codebuild/docker:1.12.1"  | Docker image for build environment, _e.g._ `aws/codebuild/docker:1.12.1` or `aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0`                               |
+| build_compute_type  | "BUILD_GENERAL1_SMALL"         | `CodeBuild` instance size.  Possible values are: ```BUILD_GENERAL1_SMALL``` ```BUILD_GENERAL1_MEDIUM``` ```BUILD_GENERAL1_LARGE```                              |
+| buildspec           | ""                             | (Optional) `buildspec` declaration to use for building the project. http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html                   |
+| privileged_mode     | ""                             | (Optional) If set to true, enables running the Docker daemon inside a Docker container on the `CodeBuild` instance. Used when building Docker images            |
+| aws_region          | ""                             | (Optional) AWS Region, _e.g._ `us-east-1`. Used as `CodeBuild` ENV variable ``$AWS_REGION`` when building Docker images                                         |
+| aws_account_id      | ""                             | (Optional) AWS Account ID. Used as `CodeBuild` ENV variable ``$AWS_ACCOUNT_ID`` when building Docker images                                                     |
+| image_repo_name     | "UNSET"                        | (Optional) ECR repository name to store the Docker image built by the module. Used as `CodeBuild` ENV variable ``$IMAGE_REPO_NAME`` when building Docker images |
+| image_tag           | "latest"                       | (Optional) Docker image tag in the ECR repository, _e.g._ `latest`. Used as `CodeBuild` ENV variable ``$IMAGE_TAG`` when building Docker images                 |
 
 
 ## License

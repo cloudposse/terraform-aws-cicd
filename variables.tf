@@ -49,8 +49,8 @@ variable "buildspec" {
 # https://www.terraform.io/docs/configuration/variables.html
 # It is recommended you avoid using boolean values and use explicit strings
 variable "poll_source_changes" {
-  type = "string"
-  default = "true"
+  type        = "string"
+  default     = "true"
   description = "Periodically check the location of your source content and run the pipeline if changes are detected"
 }
 
@@ -88,12 +88,12 @@ variable "aws_account_id" {
 
 variable "image_repo_name" {
   type        = "string"
-  default     = ""
+  default     = "UNSET"
   description = "(Optional) ECR repository name to store the Docker image built by this module. Used as CodeBuild ENV variable when building Docker images. For more info: http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html"
 }
 
 variable "image_tag" {
   type        = "string"
-  default     = ""
+  default     = "latest"
   description = "(Optional) Docker image tag in the ECR repository, e.g. 'latest'. Used as CodeBuild ENV variable when building Docker images. For more info: http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html"
 }
