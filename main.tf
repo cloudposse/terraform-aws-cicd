@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "build" {
-  source             = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.5.3"
+  source             = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=feature-generalize-env-vars"
   namespace          = "${var.namespace}"
   name               = "${var.name}"
   stage              = "${var.stage}"
