@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "build" {
-  source             = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.5.3"
+  source             = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.6.0"
   namespace          = "${var.namespace}"
   name               = "${var.name}"
   stage              = "${var.stage}"
@@ -147,6 +147,7 @@ module "build" {
   aws_account_id     = "${signum(length(var.aws_account_id)) == 1 ? var.aws_account_id : data.aws_caller_identity.default.account_id}"
   image_repo_name    = "${var.image_repo_name}"
   image_tag          = "${var.image_tag}"
+  github_token       = "${var.github_oauth_token}"
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
