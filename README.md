@@ -1,5 +1,4 @@
-# terraform-aws-cicd
-
+# terraform-aws-cicd [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-cicd.svg)](https://travis-ci.org/cloudposse/terraform-aws-cicd)
 
 Terraform module to create AWS [`CodePipeline`](https://aws.amazon.com/codepipeline/) with [`CodeBuild`](https://aws.amazon.com/codebuild/) for [`CI/CD`](https://en.wikipedia.org/wiki/CI/CD)
 
