@@ -1,32 +1,32 @@
 variable "namespace" {
-  default = "global"
+  default     = "global"
   description = "Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'"
 }
 
 variable "stage" {
-  default = "default"
+  default     = "default"
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
 }
 
 variable "name" {
-  default = "app"
+  default     = "app"
   description = "Solution name, e.g. 'app' or 'jenkins'"
 }
 
 variable "enabled" {
-  default = "true"
+  default     = "true"
   description = "Enable ``CodePipeline`` creation"
 }
 
 variable "app" {
-  type    = "string"
-  default = ""
+  type        = "string"
+  default     = ""
   description = "Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created"
 }
 
 variable "env" {
-  type    = "string"
-  default = ""
+  type        = "string"
+  default     = ""
   description = "Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created"
 }
 
@@ -52,7 +52,7 @@ variable "build_image" {
 }
 
 variable "build_compute_type" {
-  default = "BUILD_GENERAL1_SMALL"
+  default     = "BUILD_GENERAL1_SMALL"
   description = "`CodeBuild` instance size.  Possible values are: ```BUILD_GENERAL1_SMALL``` ```BUILD_GENERAL1_MEDIUM``` ```BUILD_GENERAL1_LARGE```"
 }
 
@@ -70,20 +70,20 @@ variable "poll_source_changes" {
 }
 
 variable "delimiter" {
-  type    = "string"
-  default = "-"
+  type        = "string"
+  default     = "-"
   description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
 }
 
 variable "attributes" {
-  type    = "list"
-  default = []
+  type        = "list"
+  default     = []
   description = "Additional attributes (e.g. `policy` or `role`)"
 }
 
 variable "tags" {
-  type    = "map"
-  default = {}
+  type        = "map"
+  default     = {}
   description = "Additional tags (e.g. `map('BusinessUnit', 'XYZ')`"
 }
 
