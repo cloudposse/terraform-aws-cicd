@@ -180,6 +180,12 @@ CMD [ "npm", "start" ]
 | repo_owner |__REQUIRED__ |GitHub Organization or Person name|
 | stage |"default" |Stage, e.g. 'prod', 'staging', 'dev', or 'test'|
 | tags |{} |Additional tags (e.g. `map('BusinessUnit', 'XYZ')`|
+| jenkins_url | __OPTIONAL__ | Jenkins URL when used with Terraform AWS Jenkins module  |
+| company_nam | __OPTIONAL__ | Company name when used with Terraform AWS Jenkins module |
+| country_cod | __OPTIONAL__ | Country code when used with Terraform AWS Jenkins module |
+| time_zone   | __OPTIONAL__ | Time zone when used with Terraform AWS Jenkins module    |
+
+
 
 ## Output
 

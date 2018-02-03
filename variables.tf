@@ -34,6 +34,26 @@ variable "github_oauth_token" {
   description = "GitHub Oauth Token with permissions to access private repositories"
 }
 
+variable "jenkins_url" {
+  default     = ""
+  description = "(Optional) Jenkins URL when used with Terraform AWS Jenkins module (`JENKINS_URL`)"
+}
+
+variable "company_name" {
+  default     = ""
+  description = "(Optional) Company name when used with Terraform AWS Jenkins module (`COMPANY_NAME`)"
+}
+
+variable "country_code" {
+  default     = ""
+  description = "(Optional) Country code when used with Terraform AWS Jenkins module (`COUNTRY_CODE`)"
+}
+
+variable "time_zone" {
+  default     = ""
+  description = "(Optional) Time zone when used with Terraform AWS Jenkins module (`TIME_ZONE`)"
+}
+
 variable "repo_owner" {
   description = "GitHub Organization or Person name"
 }
