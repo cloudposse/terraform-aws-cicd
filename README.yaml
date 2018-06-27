@@ -176,7 +176,6 @@ examples: |-
   CMD [ "npm", "start" ]
 
   ```
-#  Example goes here...
 
 # How to get started quickly
 #quickstart: |-
