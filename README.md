@@ -2,7 +2,7 @@
 
 [![Cloud Posse](https://cloudposse.com/logo-300x69.png)](https://cloudposse.com)
 
-# terraform-aws-cicd  [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-cicd.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-cicd) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-cicd.svg)](https://github.com/cloudposse/terraform-aws-cicd/releases) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# terraform-aws-cicd [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-cicd.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-cicd) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-cicd.svg)](https://github.com/cloudposse/terraform-aws-cicd/releases) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module to create AWS [`CodePipeline`](https://aws.amazon.com/codepipeline/) with [`CodeBuild`](https://aws.amazon.com/codebuild/) for [`CI/CD`](https://en.wikipedia.org/wiki/CI/CD)
@@ -197,7 +197,7 @@ Available targets:
 | image_tag | Docker image tag in the ECR repository, e.g. 'latest'. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | string | `latest` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | `global` | no |
-| poll_source_changes | Periodically check the location of your source content and run the pipeline if changes are detected | string | `true` | no |
+| poll_source_changes | Periodically check the location of your source content and run the pipeline if changes are detected | string | `false` | no |
 | privileged_mode | If set to true, enables running the Docker daemon inside a Docker container on the CodeBuild instance. Used when building Docker images | string | `false` | no |
 | repo_name | GitHub repository name of the application to be built (and deployed to Elastic Beanstalk if configured) | string | - | yes |
 | repo_owner | GitHub Organization or Person name | string | - | yes |
@@ -218,6 +218,8 @@ Work directly with our team of DevOps experts via email, slack, and video confer
 
 We provide *commercial support* for all of our [Open Source][github] projects. As a *Dedicated Support* customer, you have access to our team of subject matter experts at a fraction of the cost of a fulltime engineer. 
 
+[![E-Mail](https://img.shields.io/badge/email-hello@cloudposse.com-blue.svg)](mailto:hello@cloudposse.com)
+
 - **Questions.** We'll use a Shared Slack channel between your team and ours.
 - **Troubleshooting.** We'll help you triage why things aren't working.
 - **Code Reviews.** We'll review your Pull Requests and provide constructive feedback.
@@ -225,6 +227,7 @@ We provide *commercial support* for all of our [Open Source][github] projects. A
 - **Build New Terraform Modules.** We'll develop original modules to provision infrastructure.
 - **Cloud Architecture.** We'll assist with your cloud strategy and design.
 - **Implementation.** We'll provide hands on support to implement our reference architectures. 
+
 
 ## Community Forum
 
@@ -312,8 +315,8 @@ Check out [our other projects][github], [apply for a job][jobs], or [hire us][hi
 |---|---|
 
   [goruha_homepage]: https://github.com/goruha
-  [goruha_avatar]: http://s.gravatar.com/avatar/bc70834d32ed4517568a1feb0b9be7e2?s=144
+  [goruha_avatar]: https://github.com/goruha.png?size=150
   [aknysh_homepage]: https://github.com/aknysh
-  [aknysh_avatar]: https://avatars0.githubusercontent.com/u/7356997?v=4&u=ed9ce1c9151d552d985bdf5546772e14ef7ab617&s=144
+  [aknysh_avatar]: https://github.com/aknysh.png?size=150
 
 
