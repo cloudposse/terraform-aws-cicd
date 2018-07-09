@@ -23,7 +23,7 @@ badges:
     url: "https://travis-ci.org/cloudposse/terraform-aws-cicd"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-cicd.svg"
-    url: "https://github.com/cloudposse/terraform-aws-cicd/releases"
+    url: "https://github.com/cloudposse/terraform-aws-cicd/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
@@ -189,10 +189,6 @@ include:
 # Contributors to this project
 contributors:
   - name: "Igor Rodionov"
-    homepage: "https://github.com/goruha"
-    avatar: "http://s.gravatar.com/avatar/bc70834d32ed4517568a1feb0b9be7e2?s=144"
     github: "goruha"
   - name: "Andriy Knysh"
-    homepage: "https://github.com/aknysh"
-    avatar: "https://avatars0.githubusercontent.com/u/7356997?v=4&u=ed9ce1c9151d552d985bdf5546772e14ef7ab617&s=144"
     github: "aknysh"

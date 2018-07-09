@@ -19,7 +19,7 @@
 | image_tag | Docker image tag in the ECR repository, e.g. 'latest'. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | string | `latest` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | `global` | no |
-| poll_source_changes | Periodically check the location of your source content and run the pipeline if changes are detected | string | `true` | no |
+| poll_source_changes | Periodically check the location of your source content and run the pipeline if changes are detected | string | `false` | no |
 | privileged_mode | If set to true, enables running the Docker daemon inside a Docker container on the CodeBuild instance. Used when building Docker images | string | `false` | no |
 | repo_name | GitHub repository name of the application to be built (and deployed to Elastic Beanstalk if configured) | string | - | yes |
 | repo_owner | GitHub Organization or Person name | string | - | yes |
