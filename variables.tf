@@ -65,7 +65,7 @@ variable "buildspec" {
 # It is recommended you avoid using boolean values and use explicit strings
 variable "poll_source_changes" {
   type        = "string"
-  default     = "false"
+  default     = "true"
   description = "Periodically check the location of your source content and run the pipeline if changes are detected"
 }
 
