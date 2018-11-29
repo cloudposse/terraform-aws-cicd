@@ -92,6 +92,19 @@ usage: |-
       aws_account_id      = "xxxxxxxxxx"
       image_repo_name     = "ecr-repo-name"
       image_tag           = "latest"
+      # Optional extra environment variables
+      environment_variables = [{
+        name  = "JENKINS_URL"
+        value = "https://jenkins.example.com"
+      },
+      {
+        name  = "COMPANY_NAME"
+        value = "Amazon"
+      },
+      {
+        name = "TIME_ZONE"
+        value = "Pacific/Auckland"
+     }]
   }
   ```
 
