@@ -148,6 +148,7 @@ module "build" {
   image_repo_name    = "${var.image_repo_name}"
   image_tag          = "${var.image_tag}"
   github_token       = "${var.github_oauth_token}"
+  environment_variables = "${var.environment_variables}"
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {

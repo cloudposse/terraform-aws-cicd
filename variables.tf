@@ -115,3 +115,14 @@ variable "image_tag" {
   default     = "latest"
   description = "Docker image tag in the ECR repository, e.g. 'latest'. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html)"
 }
+
+variable "environment_variables" {
+  type = "list"
+
+  default = [{
+    "name"  = "NO_ADDITIONAL_BUILD_VARS"
+    "value" = "TRUE"
+  }]
+
+  description = "A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build."
+}

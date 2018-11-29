@@ -25,4 +25,4 @@
 | repo_owner | GitHub Organization or Person name | string | - | yes |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `default` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit', 'XYZ')` | map | `<map>` | no |
-
+| environment_variables | A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build. | list | <list> | no |

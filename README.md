@@ -84,6 +84,20 @@ module "build" {
     aws_account_id      = "xxxxxxxxxx"
     image_repo_name     = "ecr-repo-name"
     image_tag           = "latest"
+    # Optional extra environment variables
+    environment_variables = [{
+        name  = "JENKINS_URL"
+        value = "https://jenkins.example.com"
+      },
+      {
+        name  = "COMPANY_NAME"
+        value = "Amazon"
+      },
+      {
+        name = "TIME_ZONE"
+        value = "Pacific/Auckland"
+
+    }]
 }
 ```
 
@@ -209,6 +223,7 @@ Available targets:
 | repo_owner | GitHub Organization or Person name | string | - | yes |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `default` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit', 'XYZ')` | map | `<map>` | no |
+| environment_variables | A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build. | list | <list> | no |
 
 
 
