@@ -7,6 +7,21 @@
 # Name of this project
 name: terraform-aws-cicd
 
+# Tags of this project
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - cicd
+  - codepipeline
+  - codebuild
+  - continuous-integration
+  - continuous-delivery
+
+# Categories of this project
+categories:
+  - terraform-modules/cicd
+
 # Logo for this project
 #logo: docs/logo.png
 
