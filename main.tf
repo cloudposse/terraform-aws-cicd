@@ -152,8 +152,8 @@ module "build" {
   environment_variables = "${var.environment_variables}"
 
   vpc_id             = "${var.vpc_id}"
-  subnets            = "${var.subnets}"
-  security_group_ids = "${var.security_group_ids}"
+  subnets            = ["${var.subnets}"]
+  security_group_ids = ["${var.security_group_ids}"]
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
