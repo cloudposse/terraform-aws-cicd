@@ -126,3 +126,15 @@ variable "environment_variables" {
 
   description = "A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build."
 }
+
+variable "vpc_id" {
+  type = "string"
+}
+
+variable "subnets" {
+  type = "list"
+}
+
+variable "security_group_ids" {
+  type = "list"
+}
