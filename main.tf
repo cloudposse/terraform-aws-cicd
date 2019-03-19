@@ -1,7 +1,6 @@
 data "aws_caller_identity" "default" {}
 
 data "aws_region" "default" {
-  current = true
 }
 
 # Define composite variables for resources
