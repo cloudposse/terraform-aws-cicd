@@ -131,7 +131,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "build" {
-  source                = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.9.0"
+  source                = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.16.0"
   namespace             = "${var.namespace}"
   name                  = "${var.name}"
   stage                 = "${var.stage}"
