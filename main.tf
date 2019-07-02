@@ -133,23 +133,24 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "codebuild" {
-  source                = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.17.0"
-  namespace             = var.namespace
-  name                  = var.name
-  stage                 = var.stage
-  build_image           = var.build_image
-  build_compute_type    = var.build_compute_type
-  buildspec             = var.buildspec
-  delimiter             = var.delimiter
-  attributes            = concat(var.attributes, ["build"])
-  tags                  = var.tags
-  privileged_mode       = var.privileged_mode
-  aws_region            = signum(length(var.aws_region)) == 1 ? var.aws_region : data.aws_region.default.name
-  aws_account_id        = signum(length(var.aws_account_id)) == 1 ? var.aws_account_id : data.aws_caller_identity.default.account_id
-  image_repo_name       = var.image_repo_name
-  image_tag             = var.image_tag
-  github_token          = var.github_oauth_token
-  environment_variables = var.environment_variables
+  source                      = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.17.0"
+  namespace                   = var.namespace
+  name                        = var.name
+  stage                       = var.stage
+  build_image                 = var.build_image
+  build_compute_type          = var.build_compute_type
+  buildspec                   = var.buildspec
+  delimiter                   = var.delimiter
+  attributes                  = concat(var.attributes, ["build"])
+  tags                        = var.tags
+  privileged_mode             = var.privileged_mode
+  aws_region                  = signum(length(var.aws_region)) == 1 ? var.aws_region : data.aws_region.default.name
+  aws_account_id              = signum(length(var.aws_account_id)) == 1 ? var.aws_account_id : data.aws_caller_identity.default.account_id
+  image_repo_name             = var.image_repo_name
+  image_tag                   = var.image_tag
+  github_token                = var.github_oauth_token
+  environment_variables       = var.environment_variables
+  cache_bucket_suffix_enabled = var.codebuild_cache_bucket_suffix_enabled
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {

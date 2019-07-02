@@ -140,3 +140,9 @@ variable "environment_variables" {
 
   description = "A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build"
 }
+
+variable "codebuild_cache_bucket_suffix_enabled" {
+  type        = bool
+  description = "The cache bucket generates a random 13 character string to generate a unique bucket name. If set to false it uses terraform-null-label's id value"
+  default     = true
+}

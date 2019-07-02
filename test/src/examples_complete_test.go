@@ -28,14 +28,14 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	codebuildProjectName := terraform.Output(t, terraformOptions, "codebuild_project_name")
 
-	expectedCodebuildProjectName := "eg-test-cicd-test"
+	expectedCodebuildProjectName := "eg-test-cicd-test-build"
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedCodebuildProjectName, codebuildProjectName)
 
 	// Run `terraform output` to get the value of an output variable
 	codebuildCacheS3BucketName := terraform.Output(t, terraformOptions, "codebuild_cache_bucket_name")
 
-	expectedCodebuildCacheS3BucketName := "eg-test-cicd-test"
+	expectedCodebuildCacheS3BucketName := "eg-test-cicd-test-build"
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedCodebuildCacheS3BucketName, codebuildCacheS3BucketName)
 

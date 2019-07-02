@@ -16,6 +16,8 @@ branch = "master"
 
 poll_source_changes = false
 
+codebuild_cache_bucket_suffix_enabled = false
+
 environment_variables = [
   {
     name  = "APP_URL"
