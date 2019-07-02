@@ -33,9 +33,9 @@ github_repo: cloudposse/terraform-aws-cicd
 
 # Badges to display
 badges:
-  - name: "Build Status"
-    image: "https://travis-ci.org/cloudposse/terraform-aws-cicd.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/terraform-aws-cicd"
+  - name: "Codefresh Build Status"
+    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-cicd?type=cf-1"
+    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d1a328ee38a04cb5212f81b"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-cicd.svg"
     url: "https://github.com/cloudposse/terraform-aws-cicd/releases/latest"
@@ -76,12 +76,12 @@ usage: |-
   ```hcl
   module "build" {
       source              = "git::https://github.com/cloudposse/terraform-aws-cicd.git?ref=master"
-      namespace           = "global"
-      name                = "app"
+      namespace           = "eg"
       stage               = "staging"
+      name                = "app"
 
       # Enable the pipeline creation
-      enabled             = "true"
+      enabled             = true
 
       # Elastic Beanstalk
       app                 = "<(Optional) Elastic Beanstalk application name>"
@@ -95,18 +95,19 @@ usage: |-
 
       # http://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html
       # http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
-      build_image         = "aws/codebuild/docker:1.12.1"
+      build_image         = "aws/codebuild/standard:2.0"
       build_compute_type  = "BUILD_GENERAL1_SMALL"
 
       # These attributes are optional, used as ENV variables when building Docker images and pushing them to ECR
       # For more info:
       # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
       # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html
-      privileged_mode     = "true"
+      privileged_mode     = true
       aws_region          = "us-east-1"
       aws_account_id      = "xxxxxxxxxx"
       image_repo_name     = "ecr-repo-name"
       image_tag           = "latest"
+
       # Optional extra environment variables
       environment_variables = [{
         name  = "JENKINS_URL"
@@ -216,6 +217,8 @@ include:
 
 # Contributors to this project
 contributors:
+  - name: "Erik Osterman"
+    github: "osterman"
   - name: "Igor Rodionov"
     github: "goruha"
   - name: "Andriy Knysh"
