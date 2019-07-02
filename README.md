@@ -3,7 +3,7 @@
 
 [![Cloud Posse][logo]](https://cpco.io/homepage)
 
-# terraform-aws-cicd [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-cicd.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-cicd) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-cicd.svg)](https://github.com/cloudposse/terraform-aws-cicd/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# terraform-aws-cicd [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-cicd?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d1a328ee38a04cb5212f81b) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-cicd.svg)](https://github.com/cloudposse/terraform-aws-cicd/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module to create AWS [`CodePipeline`](https://aws.amazon.com/codepipeline/) with [`CodeBuild`](https://aws.amazon.com/codebuild/) for [`CI/CD`](https://en.wikipedia.org/wiki/CI/CD)
@@ -64,17 +64,22 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 
 ## Usage
 
+
+**IMPORTANT:** The `master` branch is used in `source` just as an example. In your code, do not pin to `master` because there may be breaking changes between releases.
+Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://github.com/cloudposse/terraform-aws-cicd/releases).
+
+
 Include this repository as a module in your existing terraform code:
 
 ```hcl
 module "build" {
     source              = "git::https://github.com/cloudposse/terraform-aws-cicd.git?ref=master"
-    namespace           = "global"
-    name                = "app"
+    namespace           = "eg"
     stage               = "staging"
+    name                = "app"
 
     # Enable the pipeline creation
-    enabled             = "true"
+    enabled             = true
 
     # Elastic Beanstalk
     app                 = "<(Optional) Elastic Beanstalk application name>"
@@ -88,18 +93,19 @@ module "build" {
 
     # http://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html
     # http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
-    build_image         = "aws/codebuild/docker:1.12.1"
+    build_image         = "aws/codebuild/standard:2.0"
     build_compute_type  = "BUILD_GENERAL1_SMALL"
 
     # These attributes are optional, used as ENV variables when building Docker images and pushing them to ECR
     # For more info:
     # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
     # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html
-    privileged_mode     = "true"
+    privileged_mode     = true
     aws_region          = "us-east-1"
     aws_account_id      = "xxxxxxxxxx"
     image_repo_name     = "ecr-repo-name"
     image_tag           = "latest"
+
     # Optional extra environment variables
     environment_variables = [{
       name  = "JENKINS_URL"
@@ -212,34 +218,47 @@ Available targets:
   lint                                Lint terraform code
 
 ```
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | app | Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created | string | `` | no |
-| attributes | Additional attributes (e.g. `policy` or `role`) | list | `<list>` | no |
+| attributes | Additional attributes (e.g. `policy` or `role`) | list(string) | `<list>` | no |
 | aws_account_id | AWS Account ID. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | string | `` | no |
-| aws_region | AWS Region, e.g. us-east-1. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | string | `` | no |
-| branch | Branch of the GitHub repository, _e.g._ ``master`` | string | - | yes |
+| aws_region | AWS Region, e.g. `us-east-1`. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | string | `` | no |
+| branch | Branch of the GitHub repository, _e.g._ `master` | string | - | yes |
 | build_compute_type | `CodeBuild` instance size.  Possible values are: ```BUILD_GENERAL1_SMALL``` ```BUILD_GENERAL1_MEDIUM``` ```BUILD_GENERAL1_LARGE``` | string | `BUILD_GENERAL1_SMALL` | no |
-| build_image | Docker image for build environment, _e.g._ `aws/codebuild/docker:1.12.1` or `aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0` | string | `aws/codebuild/docker:1.12.1` | no |
+| build_image | Docker image for build environment, _e.g._ `aws/codebuild/standard:2.0` or `aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0` | string | `aws/codebuild/standard:2.0` | no |
 | buildspec | Declaration to use for building the project. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html) | string | `` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
-| enabled | Enable ``CodePipeline`` creation | string | `true` | no |
+| enabled | Enable ``CodePipeline`` creation | bool | `true` | no |
 | env | Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created | string | `` | no |
-| environment_variables | A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build. | list | `<list>` | no |
+| environment_variables | A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build | object | `<list>` | no |
 | github_oauth_token | GitHub Oauth Token with permissions to access private repositories | string | - | yes |
 | image_repo_name | ECR repository name to store the Docker image built by this module. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | string | `UNSET` | no |
 | image_tag | Docker image tag in the ECR repository, e.g. 'latest'. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | string | `latest` | no |
-| name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
-| namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | `global` | no |
-| poll_source_changes | Periodically check the location of your source content and run the pipeline if changes are detected | string | `true` | no |
-| privileged_mode | If set to true, enables running the Docker daemon inside a Docker container on the CodeBuild instance. Used when building Docker images | string | `false` | no |
+| name | Solution name, e.g. 'app' or 'jenkins' | string | - | yes |
+| namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | `` | no |
+| poll_source_changes | Periodically check the location of your source content and run the pipeline if changes are detected | bool | `true` | no |
+| privileged_mode | If set to true, enables running the Docker daemon inside a Docker container on the CodeBuild instance. Used when building Docker images | bool | `false` | no |
 | repo_name | GitHub repository name of the application to be built (and deployed to Elastic Beanstalk if configured) | string | - | yes |
 | repo_owner | GitHub Organization or Person name | string | - | yes |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `default` | no |
-| tags | Additional tags (e.g. `map('BusinessUnit', 'XYZ')` | map | `<map>` | no |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `` | no |
+| tags | Additional tags (e.g. `map('BusinessUnit', 'XYZ')` | map(string) | `<map>` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| codebuild_badge_url | The URL of the build badge when badge_enabled is enabled |
+| codebuild_cache_bucket_arn | CodeBuild cache S3 bucket ARN |
+| codebuild_cache_bucket_name | CodeBuild cache S3 bucket name |
+| codebuild_project_id | CodeBuild project ID |
+| codebuild_project_name | CodeBuild project name |
+| codebuild_role_arn | CodeBuild IAM Role ARN |
+| codebuild_role_id | CodeBuild IAM Role ID |
+| codepipeline_arn | CodePipeline ARN |
+| codepipeline_id | CodePipeline ID |
 
 
 
@@ -306,7 +325,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2018 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2019 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
@@ -361,9 +380,11 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 
 ### Contributors
 
-|  [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] |
-|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] |
+|---|---|---|
 
+  [osterman_homepage]: https://github.com/osterman
+  [osterman_avatar]: https://github.com/osterman.png?size=150
   [goruha_homepage]: https://github.com/goruha
   [goruha_avatar]: https://github.com/goruha.png?size=150
   [aknysh_homepage]: https://github.com/aknysh
