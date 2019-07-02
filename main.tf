@@ -153,7 +153,7 @@ module "codebuild" {
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
-  role       = module.codebuild.role_arn
+  role       = module.codebuild.role_id
   policy_arn = aws_iam_policy.s3.arn
 }
 
