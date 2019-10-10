@@ -36,6 +36,7 @@ variable "elastic_beanstalk_environment_name" {
 variable "github_oauth_token" {
   type        = string
   description = "GitHub Oauth Token with permissions to access private repositories"
+  default     = ""
 }
 
 variable "repo_owner" {

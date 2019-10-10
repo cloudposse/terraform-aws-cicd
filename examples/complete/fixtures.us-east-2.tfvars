@@ -6,7 +6,7 @@ stage = "test"
 
 name = "cicd-test"
 
-github_oauth_token = "test"
+github_oauth_token = ""
 
 repo_owner = "cloudposse"
 
