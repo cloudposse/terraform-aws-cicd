@@ -101,7 +101,7 @@ variable "privileged_mode" {
   description = "If set to true, enables running the Docker daemon inside a Docker container on the CodeBuild instance. Used when building Docker images"
 }
 
-variable "aws_region" {
+variable "region" {
   type        = string
   default     = ""
   description = "AWS Region, e.g. `us-east-1`. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html)"
