@@ -21,13 +21,13 @@ variable "enabled" {
   description = "Enable ``CodePipeline`` creation"
 }
 
-variable "app" {
+variable "elastic_beanstalk_application_name" {
   type        = string
   default     = ""
   description = "Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created"
 }
 
-variable "env" {
+variable "elastic_beanstalk_environment_name" {
   type        = string
   default     = ""
   description = "Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created"

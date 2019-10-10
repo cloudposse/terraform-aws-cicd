@@ -5,7 +5,7 @@ data "aws_region" "default" {
 }
 
 module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.15.0"
   enabled    = var.enabled
   namespace  = var.namespace
   name       = var.name
@@ -124,7 +124,7 @@ data "aws_iam_policy_document" "codebuild" {
     sid = ""
 
     actions = [
-      "codebuild:*",
+      "codebuild:*"
     ]
 
     resources = [module.codebuild.project_id]
@@ -144,8 +144,8 @@ module "codebuild" {
   attributes                  = concat(var.attributes, ["build"])
   tags                        = var.tags
   privileged_mode             = var.privileged_mode
-  aws_region                  = signum(length(var.aws_region)) == 1 ? var.aws_region : data.aws_region.default.name
-  aws_account_id              = signum(length(var.aws_account_id)) == 1 ? var.aws_account_id : data.aws_caller_identity.default.account_id
+  aws_region                  = var.aws_region != "" ? var.aws_region : data.aws_region.default.name
+  aws_account_id              = var.aws_account_id != "" ? var.aws_account_id : data.aws_caller_identity.default.account_id
   image_repo_name             = var.image_repo_name
   image_tag                   = var.image_tag
   github_token                = var.github_oauth_token
@@ -176,7 +176,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 
 resource "aws_codepipeline" "source_build_deploy" {
   # Elastic Beanstalk application name and environment name are specified
-  count    = var.enabled && signum(length(var.app)) == 1 && signum(length(var.env)) == 1 ? 1 : 0
+  count    = var.enabled && var.elastic_beanstalk_application_name != "" && var.elastic_beanstalk_environment_name != "" ? 1 : 0
   name     = module.label.id
   role_arn = aws_iam_role.default.arn
 
@@ -237,15 +237,15 @@ resource "aws_codepipeline" "source_build_deploy" {
       version         = "1"
 
       configuration = {
-        ApplicationName = var.app
-        EnvironmentName = var.env
+        ApplicationName = var.elastic_beanstalk_application_name
+        EnvironmentName = var.elastic_beanstalk_environment_name
       }
     }
   }
 }
 
 resource "aws_codepipeline" "source_build" {
-  count    = var.enabled && signum(length(var.app)) == 0 || signum(length(var.env)) == 0 ? 1 : 0
+  count    = var.enabled && (var.elastic_beanstalk_application_name == "" || var.elastic_beanstalk_environment_name == "") ? 1 : 0
   name     = module.label.id
   role_arn = aws_iam_role.default.arn
 
