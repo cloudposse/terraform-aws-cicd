@@ -161,7 +161,7 @@ module "codebuild" {
   attributes                  = concat(var.attributes, ["build"])
   tags                        = var.tags
   privileged_mode             = var.privileged_mode
-  aws_region                  = var.aws_region != "" ? var.aws_region : data.aws_region.default.name
+  aws_region                  = var.region != "" ? var.region : data.aws_region.default.name
   aws_account_id              = var.aws_account_id != "" ? var.aws_account_id : data.aws_caller_identity.default.account_id
   image_repo_name             = var.image_repo_name
   image_tag                   = var.image_tag
