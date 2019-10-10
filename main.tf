@@ -161,7 +161,7 @@ module "codebuild" {
   attributes                  = concat(var.attributes, ["build"])
   tags                        = var.tags
   privileged_mode             = var.privileged_mode
-  aws_region                  = var.region != "" ? var.region : data.aws_region.default.name
+  aws_region                  = var.aws_region != "" ? var.aws_region : data.aws_region.default.name
   aws_account_id              = var.aws_account_id != "" ? var.aws_account_id : data.aws_caller_identity.default.account_id
   image_repo_name             = var.image_repo_name
   image_tag                   = var.image_tag
@@ -206,42 +206,20 @@ resource "aws_codepipeline" "default" {
   stage {
     name = "Source"
 
-    dynamic "action" {
-      for_each = var.github_oauth_token != "" ? ["true"] : []
-      content {
-        name             = "Source"
-        category         = "Source"
-        owner            = "ThirdParty"
-        provider         = "GitHub"
-        version          = "1"
-        output_artifacts = ["code"]
+    action {
+      name             = "Source"
+      category         = "Source"
+      owner            = "ThirdParty"
+      provider         = "GitHub"
+      version          = "1"
+      output_artifacts = ["code"]
 
-        configuration = {
-          OAuthToken           = var.github_oauth_token
-          Owner                = var.repo_owner
-          Repo                 = var.repo_name
-          Branch               = var.branch
-          PollForSourceChanges = var.poll_source_changes
-        }
-      }
-    }
-
-    dynamic "action" {
-      for_each = var.github_oauth_token == "" ? ["true"] : []
-      content {
-        name             = "Source"
-        category         = "Source"
-        owner            = "ThirdParty"
-        provider         = "GitHub"
-        version          = "1"
-        output_artifacts = ["code"]
-
-        configuration = {
-          Owner                = var.repo_owner
-          Repo                 = var.repo_name
-          Branch               = var.branch
-          PollForSourceChanges = var.poll_source_changes
-        }
+      configuration = {
+        OAuthToken           = var.github_oauth_token
+        Owner                = var.repo_owner
+        Repo                 = var.repo_name
+        Branch               = var.branch
+        PollForSourceChanges = var.poll_source_changes
       }
     }
   }
