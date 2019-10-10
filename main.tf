@@ -206,20 +206,42 @@ resource "aws_codepipeline" "default" {
   stage {
     name = "Source"
 
-    action {
-      name             = "Source"
-      category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
-      version          = "1"
-      output_artifacts = ["code"]
+    dynamic "action" {
+      for_each = var.github_oauth_token != "" ? ["true"] : []
+      content {
+        name             = "Source"
+        category         = "Source"
+        owner            = "ThirdParty"
+        provider         = "GitHub"
+        version          = "1"
+        output_artifacts = ["code"]
 
-      configuration = {
-        OAuthToken           = var.github_oauth_token
-        Owner                = var.repo_owner
-        Repo                 = var.repo_name
-        Branch               = var.branch
-        PollForSourceChanges = var.poll_source_changes
+        configuration = {
+          OAuthToken           = var.github_oauth_token
+          Owner                = var.repo_owner
+          Repo                 = var.repo_name
+          Branch               = var.branch
+          PollForSourceChanges = var.poll_source_changes
+        }
+      }
+    }
+
+    dynamic "action" {
+      for_each = var.github_oauth_token == "" ? ["true"] : []
+      content {
+        name             = "Source"
+        category         = "Source"
+        owner            = "ThirdParty"
+        provider         = "GitHub"
+        version          = "1"
+        output_artifacts = ["code"]
+
+        configuration = {
+          Owner                = var.repo_owner
+          Repo                 = var.repo_name
+          Branch               = var.branch
+          PollForSourceChanges = var.poll_source_changes
+        }
       }
     }
   }
