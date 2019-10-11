@@ -1,10 +1,10 @@
-region = "us-west-1"
+region = "us-east-2"
 
 namespace = "eg"
 
 stage = "test"
 
-name = "cicd-test"
+name = "cicd"
 
 github_oauth_token = "test"
 
@@ -17,6 +17,8 @@ branch = "master"
 poll_source_changes = false
 
 codebuild_cache_bucket_suffix_enabled = false
+
+force_destroy = true
 
 environment_variables = [
   {

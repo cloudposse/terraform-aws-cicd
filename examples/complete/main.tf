@@ -7,6 +7,7 @@ module "cicd" {
   namespace                             = var.namespace
   stage                                 = var.stage
   name                                  = var.name
+  region                                = var.region
   github_oauth_token                    = var.github_oauth_token
   repo_owner                            = var.repo_owner
   repo_name                             = var.repo_name
@@ -14,4 +15,5 @@ module "cicd" {
   poll_source_changes                   = var.poll_source_changes
   environment_variables                 = var.environment_variables
   codebuild_cache_bucket_suffix_enabled = var.codebuild_cache_bucket_suffix_enabled
+  force_destroy                         = var.force_destroy
 }

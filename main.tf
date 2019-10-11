@@ -5,7 +5,7 @@ data "aws_region" "default" {
 }
 
 module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.15.0"
   enabled    = var.enabled
   namespace  = var.namespace
   name       = var.name
@@ -16,17 +16,22 @@ module "label" {
 }
 
 resource "aws_s3_bucket" "default" {
-  bucket = module.label.id
-  acl    = "private"
-  tags   = module.label.tags
+  count         = var.enabled ? 1 : 0
+  bucket        = module.label.id
+  acl           = "private"
+  force_destroy = var.force_destroy
+  tags          = module.label.tags
 }
 
 resource "aws_iam_role" "default" {
+  count              = var.enabled ? 1 : 0
   name               = module.label.id
-  assume_role_policy = data.aws_iam_policy_document.assume.json
+  assume_role_policy = join("", data.aws_iam_policy_document.assume.*.json)
 }
 
 data "aws_iam_policy_document" "assume" {
+  count = var.enabled ? 1 : 0
+
   statement {
     sid = ""
 
@@ -44,16 +49,20 @@ data "aws_iam_policy_document" "assume" {
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  role       = aws_iam_role.default.id
-  policy_arn = aws_iam_policy.default.arn
+  count      = var.enabled ? 1 : 0
+  role       = join("", aws_iam_role.default.*.id)
+  policy_arn = join("", aws_iam_policy.default.*.arn)
 }
 
 resource "aws_iam_policy" "default" {
+  count  = var.enabled ? 1 : 0
   name   = module.label.id
-  policy = data.aws_iam_policy_document.default.json
+  policy = join("", data.aws_iam_policy_document.default.*.json)
 }
 
 data "aws_iam_policy_document" "default" {
+  count = var.enabled ? 1 : 0
+
   statement {
     sid = ""
 
@@ -79,16 +88,20 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3" {
-  role       = aws_iam_role.default.id
-  policy_arn = aws_iam_policy.s3.arn
+  count      = var.enabled ? 1 : 0
+  role       = join("", aws_iam_role.default.*.id)
+  policy_arn = join("", aws_iam_policy.s3.*.arn)
 }
 
 resource "aws_iam_policy" "s3" {
+  count  = var.enabled ? 1 : 0
   name   = "${module.label.id}-s3"
-  policy = data.aws_iam_policy_document.s3.json
+  policy = join("", data.aws_iam_policy_document.s3.*.json)
 }
 
 data "aws_iam_policy_document" "s3" {
+  count = var.enabled ? 1 : 0
+
   statement {
     sid = ""
 
@@ -100,8 +113,8 @@ data "aws_iam_policy_document" "s3" {
     ]
 
     resources = [
-      aws_s3_bucket.default.arn,
-      "${aws_s3_bucket.default.arn}/*",
+      join("", aws_s3_bucket.default.*.arn),
+      "${join("", aws_s3_bucket.default.*.arn)}/*",
       "arn:aws:s3:::elasticbeanstalk*"
     ]
 
@@ -110,21 +123,25 @@ data "aws_iam_policy_document" "s3" {
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild" {
-  role       = aws_iam_role.default.id
-  policy_arn = aws_iam_policy.codebuild.arn
+  count      = var.enabled ? 1 : 0
+  role       = join("", aws_iam_role.default.*.id)
+  policy_arn = join("", aws_iam_policy.codebuild.*.arn)
 }
 
 resource "aws_iam_policy" "codebuild" {
+  count  = var.enabled ? 1 : 0
   name   = "${module.label.id}-codebuild"
-  policy = data.aws_iam_policy_document.codebuild.json
+  policy = join("", data.aws_iam_policy_document.codebuild.*.json)
 }
 
 data "aws_iam_policy_document" "codebuild" {
+  count = var.enabled ? 1 : 0
+
   statement {
     sid = ""
 
     actions = [
-      "codebuild:*",
+      "codebuild:*"
     ]
 
     resources = [module.codebuild.project_id]
@@ -134,6 +151,7 @@ data "aws_iam_policy_document" "codebuild" {
 
 module "codebuild" {
   source                      = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.17.0"
+  enabled                     = var.enabled
   namespace                   = var.namespace
   name                        = var.name
   stage                       = var.stage
@@ -144,8 +162,8 @@ module "codebuild" {
   attributes                  = concat(var.attributes, ["build"])
   tags                        = var.tags
   privileged_mode             = var.privileged_mode
-  aws_region                  = signum(length(var.aws_region)) == 1 ? var.aws_region : data.aws_region.default.name
-  aws_account_id              = signum(length(var.aws_account_id)) == 1 ? var.aws_account_id : data.aws_caller_identity.default.account_id
+  aws_region                  = var.region != "" ? var.region : data.aws_region.default.name
+  aws_account_id              = var.aws_account_id != "" ? var.aws_account_id : data.aws_caller_identity.default.account_id
   image_repo_name             = var.image_repo_name
   image_tag                   = var.image_tag
   github_token                = var.github_oauth_token
@@ -154,8 +172,9 @@ module "codebuild" {
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
+  count      = var.enabled ? 1 : 0
   role       = module.codebuild.role_id
-  policy_arn = aws_iam_policy.s3.arn
+  policy_arn = join("", aws_iam_policy.s3.*.arn)
 }
 
 # Only one of the `aws_codepipeline` resources below will be created:
@@ -174,14 +193,14 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 
 # 1. GitHub -> ECR (Docker image)
 
-resource "aws_codepipeline" "source_build_deploy" {
+resource "aws_codepipeline" "default" {
   # Elastic Beanstalk application name and environment name are specified
-  count    = var.enabled && signum(length(var.app)) == 1 && signum(length(var.env)) == 1 ? 1 : 0
+  count    = var.enabled ? 1 : 0
   name     = module.label.id
-  role_arn = aws_iam_role.default.arn
+  role_arn = join("", aws_iam_role.default.*.arn)
 
   artifact_store {
-    location = aws_s3_bucket.default.bucket
+    location = join("", aws_s3_bucket.default.*.bucket)
     type     = "S3"
   }
 
@@ -225,71 +244,23 @@ resource "aws_codepipeline" "source_build_deploy" {
     }
   }
 
-  stage {
-    name = "Deploy"
+  dynamic "stage" {
+    for_each = var.elastic_beanstalk_application_name != "" && var.elastic_beanstalk_environment_name != "" ? ["true"] : []
+    content {
+      name = "Deploy"
 
-    action {
-      name            = "Deploy"
-      category        = "Deploy"
-      owner           = "AWS"
-      provider        = "ElasticBeanstalk"
-      input_artifacts = ["package"]
-      version         = "1"
+      action {
+        name            = "Deploy"
+        category        = "Deploy"
+        owner           = "AWS"
+        provider        = "ElasticBeanstalk"
+        input_artifacts = ["package"]
+        version         = "1"
 
-      configuration = {
-        ApplicationName = var.app
-        EnvironmentName = var.env
-      }
-    }
-  }
-}
-
-resource "aws_codepipeline" "source_build" {
-  count    = var.enabled && signum(length(var.app)) == 0 || signum(length(var.env)) == 0 ? 1 : 0
-  name     = module.label.id
-  role_arn = aws_iam_role.default.arn
-
-  artifact_store {
-    location = aws_s3_bucket.default.bucket
-    type     = "S3"
-  }
-
-  stage {
-    name = "Source"
-
-    action {
-      name             = "Source"
-      category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
-      version          = "1"
-      output_artifacts = ["code"]
-
-      configuration = {
-        OAuthToken           = var.github_oauth_token
-        Owner                = var.repo_owner
-        Repo                 = var.repo_name
-        Branch               = var.branch
-        PollForSourceChanges = var.poll_source_changes
-      }
-    }
-  }
-
-  stage {
-    name = "Build"
-
-    action {
-      name     = "Build"
-      category = "Build"
-      owner    = "AWS"
-      provider = "CodeBuild"
-      version  = "1"
-
-      input_artifacts  = ["code"]
-      output_artifacts = ["package"]
-
-      configuration = {
-        ProjectName = module.codebuild.project_name
+        configuration = {
+          ApplicationName = var.elastic_beanstalk_application_name
+          EnvironmentName = var.elastic_beanstalk_environment_name
+        }
       }
     }
   }

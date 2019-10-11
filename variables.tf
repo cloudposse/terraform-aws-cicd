@@ -21,13 +21,13 @@ variable "enabled" {
   description = "Enable ``CodePipeline`` creation"
 }
 
-variable "app" {
+variable "elastic_beanstalk_application_name" {
   type        = string
   default     = ""
   description = "Elastic Beanstalk application name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created"
 }
 
-variable "env" {
+variable "elastic_beanstalk_environment_name" {
   type        = string
   default     = ""
   description = "Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created"
@@ -35,7 +35,7 @@ variable "env" {
 
 variable "github_oauth_token" {
   type        = string
-  description = "GitHub Oauth Token with permissions to access private repositories"
+  description = "GitHub Oauth Token"
 }
 
 variable "repo_owner" {
@@ -101,7 +101,7 @@ variable "privileged_mode" {
   description = "If set to true, enables running the Docker daemon inside a Docker container on the CodeBuild instance. Used when building Docker images"
 }
 
-variable "aws_region" {
+variable "region" {
   type        = string
   default     = ""
   description = "AWS Region, e.g. `us-east-1`. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html)"
@@ -145,4 +145,10 @@ variable "codebuild_cache_bucket_suffix_enabled" {
   type        = bool
   description = "The cache bucket generates a random 13 character string to generate a unique bucket name. If set to false it uses terraform-null-label's id value"
   default     = true
+}
+
+variable "force_destroy" {
+  type        = bool
+  default     = false
+  description = "Force destroy the CI/CD S3 bucket even if it's not empty"
 }
