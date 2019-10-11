@@ -63,3 +63,8 @@ variable "codebuild_cache_bucket_suffix_enabled" {
   type        = bool
   description = "The cache bucket generates a random 13 character string to generate a unique bucket name. If set to false it uses terraform-null-label's id value"
 }
+
+variable "force_destroy" {
+  type        = bool
+  description = "Force destroy the CI/CD S3 bucket even if it's not empty"
+}

@@ -15,4 +15,5 @@ module "cicd" {
   poll_source_changes                   = var.poll_source_changes
   environment_variables                 = var.environment_variables
   codebuild_cache_bucket_suffix_enabled = var.codebuild_cache_bucket_suffix_enabled
+  force_destroy                         = var.force_destroy
 }

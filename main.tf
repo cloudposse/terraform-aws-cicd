@@ -16,10 +16,11 @@ module "label" {
 }
 
 resource "aws_s3_bucket" "default" {
-  count  = var.enabled ? 1 : 0
-  bucket = module.label.id
-  acl    = "private"
-  tags   = module.label.tags
+  count         = var.enabled ? 1 : 0
+  bucket        = module.label.id
+  acl           = "private"
+  force_destroy = var.force_destroy
+  tags          = module.label.tags
 }
 
 resource "aws_iam_role" "default" {
