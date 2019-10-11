@@ -4,7 +4,7 @@ namespace = "eg"
 
 stage = "test"
 
-name = "cicd-build"
+name = "cicd"
 
 github_oauth_token = "test"
 
