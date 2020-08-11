@@ -73,11 +73,11 @@ usage: |-
       enabled             = true
 
       # Elastic Beanstalk
-      app                 = "<(Optional) Elastic Beanstalk application name>"
-      env                 = "<(Optional) Elastic Beanstalk environment name>"
+      elastic_beanstalk_application_name = "<(Optional) Elastic Beanstalk application name>"
+      elastic_beanstalk_environment_name = "<(Optional) Elastic Beanstalk environment name>"
 
       # Application repository on GitHub
-      github_oauth_token  = "(Optional) <GitHub Oauth Token with permissions to access private repositories>"
+      github_oauth_token  = "(Required) <GitHub Oauth Token with permissions to access private repositories>"
       repo_owner          = "<GitHub Organization or Person name>"
       repo_name           = "<GitHub repository name of the application to be built and deployed to Elastic Beanstalk>"
       branch              = "<Branch of the GitHub repository>"
@@ -92,7 +92,7 @@ usage: |-
       # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
       # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html
       privileged_mode     = true
-      aws_region          = "us-east-1"
+      region          = "us-east-1"
       aws_account_id      = "xxxxxxxxxx"
       image_repo_name     = "ecr-repo-name"
       image_tag           = "latest"
