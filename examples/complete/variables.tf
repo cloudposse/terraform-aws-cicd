@@ -53,3 +53,8 @@ variable "force_destroy" {
   type        = bool
   description = "Force destroy the CI/CD S3 bucket even if it's not empty"
 }
+
+variable "cache_type" {
+  type        = string
+  description = "The type of storage that will be used for the AWS CodeBuild project cache. Valid values: NO_CACHE, LOCAL, and S3.  Defaults to NO_CACHE.  If cache_type is S3, it will create an S3 bucket for storing codebuild cache inside"
+}

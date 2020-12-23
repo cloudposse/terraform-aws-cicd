@@ -111,3 +111,9 @@ variable "force_destroy" {
   default     = false
   description = "Force destroy the CI/CD S3 bucket even if it's not empty"
 }
+
+variable "cache_type" {
+  type        = string
+  default     = "S3"
+  description = "The type of storage that will be used for the AWS CodeBuild project cache. Valid values: NO_CACHE, LOCAL, and S3.  Defaults to S3 to keep same behavior as before upgrading `codebuild` module to 0.18+ version.  If cache_type is S3, it will create an S3 bucket for storing codebuild cache inside"
+}
