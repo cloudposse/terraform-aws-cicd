@@ -64,7 +64,9 @@ usage: |-
 
   ```hcl
   module "build" {
-      source              = "git::https://github.com/cloudposse/terraform-aws-cicd.git?ref=master"
+      source = "cloudposse/cicd/aws"
+      # Cloud Posse recommends pinning every module to a specific version
+      # version = "x.x.x"
       namespace           = "eg"
       stage               = "staging"
       name                = "app"
