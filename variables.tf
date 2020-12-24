@@ -147,6 +147,13 @@ variable "codebuild_cache_bucket_suffix_enabled" {
   default     = true
 }
 
+variable "codebuild_cache_type" {
+  type        = string
+  description = "The type of storage that will be used for the AWS CodeBuild project cache. Valid values: NO_CACHE, LOCAL, and S3"
+  default     = "S3"
+}
+
+
 variable "force_destroy" {
   type        = bool
   default     = false
