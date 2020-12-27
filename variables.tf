@@ -1,26 +1,3 @@
-variable "namespace" {
-  type        = string
-  default     = ""
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-}
-
-variable "stage" {
-  type        = string
-  default     = ""
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-}
-
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'jenkins'"
-}
-
-variable "enabled" {
-  type        = bool
-  default     = true
-  description = "Enable ``CodePipeline`` creation"
-}
-
 variable "elastic_beanstalk_application_name" {
   type        = string
   default     = ""
@@ -75,24 +52,6 @@ variable "poll_source_changes" {
   type        = bool
   default     = true
   description = "Periodically check the location of your source content and run the pipeline if changes are detected"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `policy` or `role`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit', 'XYZ')`"
 }
 
 variable "privileged_mode" {
@@ -151,4 +110,10 @@ variable "force_destroy" {
   type        = bool
   default     = false
   description = "Force destroy the CI/CD S3 bucket even if it's not empty"
+}
+
+variable "cache_type" {
+  type        = string
+  default     = "S3"
+  description = "The type of storage that will be used for the AWS CodeBuild project cache. Valid values: NO_CACHE, LOCAL, and S3.  Defaults to S3 to keep same behavior as before upgrading `codebuild` module to 0.18+ version.  If cache_type is S3, it will create an S3 bucket for storing codebuild cache inside"
 }

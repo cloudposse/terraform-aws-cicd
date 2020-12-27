@@ -35,3 +35,5 @@ environment_variables = [
 
   }
 ]
+
+cache_type = "S3"

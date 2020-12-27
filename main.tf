@@ -4,33 +4,26 @@ data "aws_caller_identity" "default" {
 data "aws_region" "default" {
 }
 
-module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
-  enabled    = var.enabled
-  namespace  = var.namespace
-  name       = var.name
-  stage      = var.stage
-  delimiter  = var.delimiter
-  attributes = var.attributes
-  tags       = var.tags
+locals {
+  enabled = module.this.enabled
 }
 
 resource "aws_s3_bucket" "default" {
-  count         = var.enabled ? 1 : 0
-  bucket        = module.label.id
+  count         = local.enabled ? 1 : 0
+  bucket        = module.this.id
   acl           = "private"
   force_destroy = var.force_destroy
-  tags          = module.label.tags
+  tags          = module.this.tags
 }
 
 resource "aws_iam_role" "default" {
-  count              = var.enabled ? 1 : 0
-  name               = module.label.id
+  count              = local.enabled ? 1 : 0
+  name               = module.this.id
   assume_role_policy = join("", data.aws_iam_policy_document.assume.*.json)
 }
 
 data "aws_iam_policy_document" "assume" {
-  count = var.enabled ? 1 : 0
+  count = local.enabled ? 1 : 0
 
   statement {
     sid = ""
@@ -49,19 +42,19 @@ data "aws_iam_policy_document" "assume" {
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  count      = var.enabled ? 1 : 0
+  count      = local.enabled ? 1 : 0
   role       = join("", aws_iam_role.default.*.id)
   policy_arn = join("", aws_iam_policy.default.*.arn)
 }
 
 resource "aws_iam_policy" "default" {
-  count  = var.enabled ? 1 : 0
-  name   = module.label.id
+  count  = local.enabled ? 1 : 0
+  name   = module.this.id
   policy = join("", data.aws_iam_policy_document.default.*.json)
 }
 
 data "aws_iam_policy_document" "default" {
-  count = var.enabled ? 1 : 0
+  count = local.enabled ? 1 : 0
 
   statement {
     sid = ""
@@ -88,19 +81,19 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3" {
-  count      = var.enabled ? 1 : 0
+  count      = local.enabled ? 1 : 0
   role       = join("", aws_iam_role.default.*.id)
   policy_arn = join("", aws_iam_policy.s3.*.arn)
 }
 
 resource "aws_iam_policy" "s3" {
-  count  = var.enabled ? 1 : 0
-  name   = "${module.label.id}-s3"
+  count  = local.enabled ? 1 : 0
+  name   = "${module.this.id}-s3"
   policy = join("", data.aws_iam_policy_document.s3.*.json)
 }
 
 data "aws_iam_policy_document" "s3" {
-  count = var.enabled ? 1 : 0
+  count = local.enabled ? 1 : 0
 
   statement {
     sid = ""
@@ -123,19 +116,19 @@ data "aws_iam_policy_document" "s3" {
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild" {
-  count      = var.enabled ? 1 : 0
+  count      = local.enabled ? 1 : 0
   role       = join("", aws_iam_role.default.*.id)
   policy_arn = join("", aws_iam_policy.codebuild.*.arn)
 }
 
 resource "aws_iam_policy" "codebuild" {
-  count  = var.enabled ? 1 : 0
-  name   = "${module.label.id}-codebuild"
+  count  = local.enabled ? 1 : 0
+  name   = "${module.this.id}-codebuild"
   policy = join("", data.aws_iam_policy_document.codebuild.*.json)
 }
 
 data "aws_iam_policy_document" "codebuild" {
-  count = var.enabled ? 1 : 0
+  count = local.enabled ? 1 : 0
 
   statement {
     sid = ""
@@ -150,17 +143,12 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "codebuild" {
-  source                      = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.17.0"
-  enabled                     = var.enabled
-  namespace                   = var.namespace
-  name                        = var.name
-  stage                       = var.stage
+  source                      = "cloudposse/codebuild/aws"
+  version                     = "0.26.0"
   build_image                 = var.build_image
   build_compute_type          = var.build_compute_type
   buildspec                   = var.buildspec
-  delimiter                   = var.delimiter
-  attributes                  = concat(var.attributes, ["build"])
-  tags                        = var.tags
+  attributes                  = ["build"]
   privileged_mode             = var.privileged_mode
   aws_region                  = var.region != "" ? var.region : data.aws_region.default.name
   aws_account_id              = var.aws_account_id != "" ? var.aws_account_id : data.aws_caller_identity.default.account_id
@@ -169,17 +157,20 @@ module "codebuild" {
   github_token                = var.github_oauth_token
   environment_variables       = var.environment_variables
   cache_bucket_suffix_enabled = var.codebuild_cache_bucket_suffix_enabled
+  cache_type                  = var.cache_type
+
+  context = module.this.context
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
-  count      = var.enabled ? 1 : 0
+  count      = local.enabled ? 1 : 0
   role       = module.codebuild.role_id
   policy_arn = join("", aws_iam_policy.s3.*.arn)
 }
 
 # Only one of the `aws_codepipeline` resources below will be created:
 
-# "source_build_deploy" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name and environment name are specified
+# "source_build_deploy" will be created if `local.enabled` is set to `true` and the Elastic Beanstalk application name and environment name are specified
 
 # This is used in two use-cases:
 
@@ -187,7 +178,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 
 # 2. GitHub -> ECR (Docker image) -> Elastic Beanstalk (running Docker stack)
 
-# "source_build" will be created if `var.enabled` is set to `true` and the Elastic Beanstalk application name or environment name are not specified
+# "source_build" will be created if `local.enabled` is set to `true` and the Elastic Beanstalk application name or environment name are not specified
 
 # This is used in this use-case:
 
@@ -195,8 +186,8 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 
 resource "aws_codepipeline" "default" {
   # Elastic Beanstalk application name and environment name are specified
-  count    = var.enabled ? 1 : 0
-  name     = module.label.id
+  count    = local.enabled ? 1 : 0
+  name     = module.this.id
   role_arn = join("", aws_iam_role.default.*.arn)
 
   artifact_store {

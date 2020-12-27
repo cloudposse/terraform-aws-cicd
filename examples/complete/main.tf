@@ -4,9 +4,6 @@ provider "aws" {
 
 module "cicd" {
   source                                = "../../"
-  namespace                             = var.namespace
-  stage                                 = var.stage
-  name                                  = var.name
   region                                = var.region
   github_oauth_token                    = var.github_oauth_token
   repo_owner                            = var.repo_owner
@@ -16,4 +13,7 @@ module "cicd" {
   environment_variables                 = var.environment_variables
   codebuild_cache_bucket_suffix_enabled = var.codebuild_cache_bucket_suffix_enabled
   force_destroy                         = var.force_destroy
+  cache_type                            = var.cache_type
+
+  context = module.this.context
 }

@@ -3,21 +3,6 @@ variable "region" {
   description = "AWS region"
 }
 
-variable "namespace" {
-  type        = string
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-}
-
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-}
-
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'jenkins'"
-}
-
 variable "github_oauth_token" {
   type        = string
   description = "GitHub Oauth Token"
@@ -67,4 +52,9 @@ variable "codebuild_cache_bucket_suffix_enabled" {
 variable "force_destroy" {
   type        = bool
   description = "Force destroy the CI/CD S3 bucket even if it's not empty"
+}
+
+variable "cache_type" {
+  type        = string
+  description = "The type of storage that will be used for the AWS CodeBuild project cache. Valid values: NO_CACHE, LOCAL, and S3.  Defaults to NO_CACHE.  If cache_type is S3, it will create an S3 bucket for storing codebuild cache inside"
 }
