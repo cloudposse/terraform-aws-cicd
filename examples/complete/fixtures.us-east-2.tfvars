@@ -37,3 +37,5 @@ environment_variables = [
 ]
 
 cache_type = "S3"
+
+mfa_delete = false
