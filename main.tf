@@ -48,6 +48,7 @@ resource "aws_iam_role" "default" {
   count              = local.enabled ? 1 : 0
   name               = module.this.id
   assume_role_policy = join("", data.aws_iam_policy_document.assume.*.json)
+  tags               = module.this.tags
 }
 
 data "aws_iam_policy_document" "assume" {
@@ -217,6 +218,7 @@ resource "aws_codepipeline" "default" {
   count    = local.enabled ? 1 : 0
   name     = module.this.id
   role_arn = join("", aws_iam_role.default.*.arn)
+  tags     = module.this.tags
 
   artifact_store {
     location = join("", aws_s3_bucket.default.*.bucket)
