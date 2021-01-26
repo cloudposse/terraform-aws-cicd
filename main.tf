@@ -9,17 +9,46 @@ locals {
 }
 
 resource "aws_s3_bucket" "default" {
+  #bridgecrew:skip=BC_AWS_S3_13:Skipping `Enable S3 Bucket Logging` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
+  #bridgecrew:skip=BC_AWS_S3_14:Skipping `Ensure all data stored in the S3 bucket is securely encrypted at rest` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   count         = local.enabled ? 1 : 0
   bucket        = module.this.id
   acl           = "private"
   force_destroy = var.force_destroy
   tags          = module.this.tags
+
+  versioning {
+    enabled    = var.versioning_enabled
+    mfa_delete = var.mfa_delete
+  }
+
+  dynamic "logging" {
+    for_each = var.access_log_bucket_name != "" ? [1] : []
+    content {
+      target_bucket = var.access_log_bucket_name
+      target_prefix = "logs/${module.this.id}/"
+    }
+  }
+
+  dynamic "server_side_encryption_configuration" {
+    for_each = var.s3_bucket_encryption_enabled ? [1] : []
+
+    content {
+      rule {
+        apply_server_side_encryption_by_default {
+          sse_algorithm = "AES256"
+        }
+      }
+    }
+  }
+
 }
 
 resource "aws_iam_role" "default" {
   count              = local.enabled ? 1 : 0
   name               = module.this.id
   assume_role_policy = join("", data.aws_iam_policy_document.assume.*.json)
+  tags               = module.this.tags
 }
 
 data "aws_iam_policy_document" "assume" {
@@ -189,6 +218,7 @@ resource "aws_codepipeline" "default" {
   count    = local.enabled ? 1 : 0
   name     = module.this.id
   role_arn = join("", aws_iam_role.default.*.arn)
+  tags     = module.this.tags
 
   artifact_store {
     location = join("", aws_s3_bucket.default.*.bucket)
