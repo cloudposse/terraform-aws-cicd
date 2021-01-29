@@ -14,7 +14,6 @@ module "cicd" {
   codebuild_cache_bucket_suffix_enabled = var.codebuild_cache_bucket_suffix_enabled
   force_destroy                         = var.force_destroy
   cache_type                            = var.cache_type
-  mfa_delete                            = var.mfa_delete
 
   context = module.this.context
 }
