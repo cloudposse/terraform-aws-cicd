@@ -94,7 +94,7 @@ tester/pull:
 build-harness/runner:
 	$(info Starting $(RUNNER_DOCKER_IMAGE):$(RUNNER_DOCKER_TAG))
 	docker run --name build-harness \
-		--rm \
+		--rm -it \
 		-e PACKAGES_PREFER_HOST=true \
 		$(addprefix -e ,$(DOCKER_ENVS)) \
 		$(MOUNT_HOME) \
