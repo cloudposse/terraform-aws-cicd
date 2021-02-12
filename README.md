@@ -283,6 +283,26 @@ Available targets:
 |------|---------|
 | aws | >= 2.0 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| codebuild | cloudposse/codebuild/aws | 0.32.0 |
+| this | cloudposse/label/null | 0.24.1 |
+
+## Resources
+
+| Name |
+|------|
+| [aws_caller_identity](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/data-sources/caller_identity) |
+| [aws_codepipeline](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/codepipeline) |
+| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/iam_policy) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/data-sources/iam_policy_document) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/iam_role) |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/iam_role_policy_attachment) |
+| [aws_region](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/data-sources/region) |
+| [aws_s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/s3_bucket) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -339,7 +359,6 @@ Available targets:
 | codebuild\_role\_id | CodeBuild IAM Role ID |
 | codepipeline\_arn | CodePipeline ARN |
 | codepipeline\_id | CodePipeline ID |
-
 <!-- markdownlint-restore -->
 
 
