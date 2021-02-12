@@ -285,4 +285,26 @@ resource "aws_codepipeline" "default" {
       }
     }
   }
+
+  dynamic "stage" {
+    for_each = var.website_bucket_name != "" ? ["true"] : []
+    content {
+      name = "Deploy"
+
+      action {
+        name            = "Deploy"
+        category        = "Deploy"
+        owner           = "AWS"
+        provider        = "S3"
+        input_artifacts = ["package"]
+        version         = "1"
+
+        configuration = {
+          BucketName = var.website_bucket_name
+          Extract    = "true"
+          CannedACL  = "public-read"
+        }
+      }
+    }
+  }
 }

@@ -135,3 +135,9 @@ variable "versioning_enabled" {
   default     = true
   description = "A state of versioning. Versioning is a means of keeping multiple variants of an object in the same bucket"
 }
+
+variable "website_bucket_name" {
+  type        = string
+  default     = ""
+  description = "Name of the S3 bucket where the website will be deployed"
+}
