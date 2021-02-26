@@ -173,7 +173,7 @@ data "aws_iam_policy_document" "codebuild" {
 
 module "codebuild" {
   source                      = "cloudposse/codebuild/aws"
-  version                     = "0.30.1"
+  version                     = "0.32.0"
   build_image                 = var.build_image
   build_compute_type          = var.build_compute_type
   buildspec                   = var.buildspec
@@ -281,6 +281,28 @@ resource "aws_codepipeline" "default" {
         configuration = {
           ApplicationName = var.elastic_beanstalk_application_name
           EnvironmentName = var.elastic_beanstalk_environment_name
+        }
+      }
+    }
+  }
+
+  dynamic "stage" {
+    for_each = var.website_bucket_name != "" ? ["true"] : []
+    content {
+      name = "Deploy"
+
+      action {
+        name            = "Deploy"
+        category        = "Deploy"
+        owner           = "AWS"
+        provider        = "S3"
+        input_artifacts = ["package"]
+        version         = "1"
+
+        configuration = {
+          BucketName = var.website_bucket_name
+          Extract    = "true"
+          CannedACL  = "public-read"
         }
       }
     }
