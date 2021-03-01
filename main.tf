@@ -5,7 +5,7 @@ data "aws_region" "default" {
 }
 
 locals {
-  enabled = module.this.enabled
+  enabled         = module.this.enabled
   webhook_enabled = local.enabled && var.webhook_enabled ? true : false
   webhook_count   = local.webhook_enabled ? 1 : 0
   webhook_secret  = join("", random_password.webhook_secret.*.result)
