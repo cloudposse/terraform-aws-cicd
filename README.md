@@ -290,7 +290,7 @@ Available targets:
 | Name | Source | Version |
 |------|--------|---------|
 | codebuild | cloudposse/codebuild/aws | 0.32.0 |
-| github_webhooks | cloudposse/repository-webhooks/github | 0.12.0 |
+| github_webhook | cloudposse/repository-webhooks/github | 0.12.0 |
 | this | cloudposse/label/null | 0.24.1 |
 
 ## Resources
@@ -306,7 +306,7 @@ Available targets:
 | [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) |
 | [aws_region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) |
 | [aws_s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) |
-| [random_string](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) |
+| [random_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) |
 
 ## Inputs
 
