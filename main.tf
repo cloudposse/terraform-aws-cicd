@@ -339,7 +339,7 @@ resource "aws_codepipeline_webhook" "default" {
   }
 }
 
-module "github_webhooks" {
+module "github_webhook" {
   source  = "cloudposse/repository-webhooks/github"
   version = "0.12.0"
 
