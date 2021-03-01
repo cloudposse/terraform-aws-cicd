@@ -276,18 +276,21 @@ Available targets:
 |------|---------|
 | terraform | >= 0.13.0 |
 | aws | >= 2.0 |
+| random | >=2.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | aws | >= 2.0 |
+| random | >=2.1 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | codebuild | cloudposse/codebuild/aws | 0.32.0 |
+| github_webhook | cloudposse/repository-webhooks/github | 0.12.0 |
 | this | cloudposse/label/null | 0.24.1 |
 
 ## Resources
@@ -296,12 +299,14 @@ Available targets:
 |------|
 | [aws_caller_identity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) |
 | [aws_codepipeline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codepipeline) |
+| [aws_codepipeline_webhook](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codepipeline_webhook) |
 | [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) |
 | [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) |
 | [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) |
 | [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) |
 | [aws_region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) |
 | [aws_s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) |
+| [random_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) |
 
 ## Inputs
 
@@ -326,6 +331,8 @@ Available targets:
 | environment\_variables | A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>  }))</pre> | <pre>[<br>  {<br>    "name": "NO_ADDITIONAL_BUILD_VARS",<br>    "value": "TRUE"<br>  }<br>]</pre> | no |
 | force\_destroy | Force destroy the CI/CD S3 bucket even if it's not empty | `bool` | `false` | no |
 | github\_oauth\_token | GitHub Oauth Token | `string` | n/a | yes |
+| github\_webhook\_events | A list of events which should trigger the webhook. See a list of [available events](https://developer.github.com/v3/activity/events/types/) | `list(string)` | <pre>[<br>  "push"<br>]</pre> | no |
+| github\_webhooks\_token | GitHub OAuth Token with permissions to create webhooks. If not provided, can be sourced from the `GITHUB_TOKEN` environment variable | `string` | `""` | no |
 | id\_length\_limit | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
 | image\_repo\_name | ECR repository name to store the Docker image built by this module. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | `string` | `"UNSET"` | no |
 | image\_tag | Docker image tag in the ECR repository, e.g. 'latest'. Used as CodeBuild ENV variable when building Docker images. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html) | `string` | `"latest"` | no |
@@ -344,6 +351,11 @@ Available targets:
 | stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
 | versioning\_enabled | A state of versioning. Versioning is a means of keeping multiple variants of an object in the same bucket | `bool` | `true` | no |
+| webhook\_authentication | The type of authentication to use. One of IP, GITHUB\_HMAC, or UNAUTHENTICATED | `string` | `"GITHUB_HMAC"` | no |
+| webhook\_enabled | Set to false to prevent the module from creating any webhook resources | `bool` | `false` | no |
+| webhook\_filter\_json\_path | The JSON path to filter on | `string` | `"$.ref"` | no |
+| webhook\_filter\_match\_equals | The value to match on (e.g. refs/heads/{Branch}) | `string` | `"refs/heads/{Branch}"` | no |
+| webhook\_target\_action | The name of the action in a pipeline you want to connect to the webhook. The action must be from the source (first) stage of the pipeline | `string` | `"Source"` | no |
 | website\_bucket\_name | Name of the S3 bucket where the website will be deployed | `string` | `""` | no |
 
 ## Outputs

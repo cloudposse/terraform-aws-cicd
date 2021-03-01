@@ -5,7 +5,11 @@ data "aws_region" "default" {
 }
 
 locals {
-  enabled = module.this.enabled
+  enabled         = module.this.enabled
+  webhook_enabled = local.enabled && var.webhook_enabled ? true : false
+  webhook_count   = local.webhook_enabled ? 1 : 0
+  webhook_secret  = join("", random_password.webhook_secret.*.result)
+  webhook_url     = join("", aws_codepipeline_webhook.default.*.url)
 }
 
 resource "aws_s3_bucket" "default" {
@@ -307,4 +311,45 @@ resource "aws_codepipeline" "default" {
       }
     }
   }
+}
+
+resource "random_password" "webhook_secret" {
+  count  = local.webhook_enabled ? 1 : 0
+  length = 32
+
+  # Special characters are not allowed in webhook secret (AWS silently ignores webhook callbacks)
+  special = false
+}
+
+resource "aws_codepipeline_webhook" "default" {
+  count           = local.webhook_count
+  name            = module.this.id
+  authentication  = var.webhook_authentication
+  target_action   = var.webhook_target_action
+  target_pipeline = join("", aws_codepipeline.default.*.name)
+
+  authentication_configuration {
+    secret_token = local.webhook_secret
+  }
+
+  filter {
+    json_path    = var.webhook_filter_json_path
+    match_equals = var.webhook_filter_match_equals
+  }
+}
+
+module "github_webhook" {
+  source  = "cloudposse/repository-webhooks/github"
+  version = "0.12.0"
+
+  enabled              = local.webhook_enabled
+  github_organization  = var.repo_owner
+  github_repositories  = [var.repo_name]
+  github_token         = var.github_webhooks_token
+  webhook_url          = local.webhook_url
+  webhook_secret       = local.webhook_secret
+  webhook_content_type = "json"
+  events               = var.github_webhook_events
+
+  context = module.this.context
 }
