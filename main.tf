@@ -309,7 +309,7 @@ resource "aws_codepipeline" "default" {
   }
 }
 
-resource "random_string" "webhook_secret" {
+resource "random_password" "webhook_secret" {
   count  = local.enabled && var.webhook_enabled ? 1 : 0
   length = 32
 
