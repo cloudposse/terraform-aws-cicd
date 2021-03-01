@@ -343,7 +343,7 @@ module "github_webhooks" {
   source  = "cloudposse/repository-webhooks/github"
   version = "0.12.0"
 
-  enabled              = local.enabled && var.webhook_enabled ? true : false
+  enabled              = local.webhook_enabled
   github_organization  = var.repo_owner
   github_repositories  = [var.repo_name]
   github_token         = var.github_webhooks_token
