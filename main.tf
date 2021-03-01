@@ -6,6 +6,10 @@ data "aws_region" "default" {
 
 locals {
   enabled = module.this.enabled
+  webhook_enabled = local.enabled && var.webhook_enabled ? true : false
+  webhook_count   = local.webhook_enabled ? 1 : 0
+  webhook_secret  = join("", random_password.webhook_secret.*.result)
+  webhook_url     = join("", aws_codepipeline_webhook.default.*.url)
 }
 
 resource "aws_s3_bucket" "default" {
@@ -310,20 +314,15 @@ resource "aws_codepipeline" "default" {
 }
 
 resource "random_password" "webhook_secret" {
-  count  = local.enabled && var.webhook_enabled ? 1 : 0
+  count  = local.webhook_enabled ? 1 : 0
   length = 32
 
   # Special characters are not allowed in webhook secret (AWS silently ignores webhook callbacks)
   special = false
 }
 
-locals {
-  webhook_secret = join("", random_string.webhook_secret.*.result)
-  webhook_url    = join("", aws_codepipeline_webhook.webhook.*.url)
-}
-
 resource "aws_codepipeline_webhook" "default" {
-  count           = local. webhook_count
+  count           = local.webhook_count
   name            = module.this.id
   authentication  = var.webhook_authentication
   target_action   = var.webhook_target_action
