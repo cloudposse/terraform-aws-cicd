@@ -322,7 +322,7 @@ locals {
   webhook_url    = join("", aws_codepipeline_webhook.webhook.*.url)
 }
 
-resource "aws_codepipeline_webhook" "webhook" {
+resource "aws_codepipeline_webhook" "default" {
   count           = local. webhook_count
   name            = module.this.id
   authentication  = var.webhook_authentication
