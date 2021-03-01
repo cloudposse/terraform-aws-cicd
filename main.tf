@@ -323,7 +323,7 @@ locals {
 }
 
 resource "aws_codepipeline_webhook" "webhook" {
-  count           = local.enabled && var.webhook_enabled ? 1 : 0
+  count           = local. webhook_count
   name            = module.this.id
   authentication  = var.webhook_authentication
   target_action   = var.webhook_target_action
