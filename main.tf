@@ -177,7 +177,7 @@ data "aws_iam_policy_document" "codebuild" {
 
 module "codebuild" {
   source                      = "cloudposse/codebuild/aws"
-  version                     = "0.32.0"
+  version                     = "0.33.0"
   build_image                 = var.build_image
   build_compute_type          = var.build_compute_type
   buildspec                   = var.buildspec

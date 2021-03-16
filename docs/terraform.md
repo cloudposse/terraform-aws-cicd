@@ -18,7 +18,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| codebuild | cloudposse/codebuild/aws | 0.32.0 |
+| codebuild | cloudposse/codebuild/aws | 0.33.0 |
 | github_webhook | cloudposse/repository-webhooks/github | 0.12.0 |
 | this | cloudposse/label/null | 0.24.1 |
 
