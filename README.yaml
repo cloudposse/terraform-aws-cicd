@@ -179,7 +179,7 @@ examples: |-
       - '**/*'
   ```
 
-  ``Dockefile``
+  ``Dockerfile``
 
   ```dockerfile
   FROM node:latest
