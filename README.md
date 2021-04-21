@@ -1,3 +1,4 @@
+
 <!-- markdownlint-disable -->
 # terraform-aws-cicd [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-cicd.svg)](https://github.com/cloudposse/terraform-aws-cicd/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 <!-- markdownlint-restore -->
@@ -51,7 +52,6 @@ and pushes the ``Docker`` image to an ``ECR`` repository. This is used when we w
 To activate this mode, don't specify the ``app`` and ``env`` attributes for the module.
     - http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
 
-
 ---
 
 This project is part of our comprehensive ["SweetOps"](https://cpco.io/sweetops) approach towards DevOps.
@@ -76,7 +76,6 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 We literally have [*hundreds of terraform modules*][terraform_modules] that are Open Source and well-maintained. Check them out!
-
 
 
 
@@ -315,6 +314,7 @@ Available targets:
 | [aws_iam_policy_document.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_s3_bucket.website](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/s3_bucket) | data source |
 
 ## Inputs
 
@@ -364,6 +364,7 @@ Available targets:
 | <a name="input_webhook_filter_json_path"></a> [webhook\_filter\_json\_path](#input\_webhook\_filter\_json\_path) | The JSON path to filter on | `string` | `"$.ref"` | no |
 | <a name="input_webhook_filter_match_equals"></a> [webhook\_filter\_match\_equals](#input\_webhook\_filter\_match\_equals) | The value to match on (e.g. refs/heads/{Branch}) | `string` | `"refs/heads/{Branch}"` | no |
 | <a name="input_webhook_target_action"></a> [webhook\_target\_action](#input\_webhook\_target\_action) | The name of the action in a pipeline you want to connect to the webhook. The action must be from the source (first) stage of the pipeline | `string` | `"Source"` | no |
+| <a name="input_website_bucket_acl"></a> [website\_bucket\_acl](#input\_website\_bucket\_acl) | Canned ACL of the S3 bucket objects that get served as a website, can be private if using CloudFront with OAI | `string` | `"public-read"` | no |
 | <a name="input_website_bucket_name"></a> [website\_bucket\_name](#input\_website\_bucket\_name) | Name of the S3 bucket where the website will be deployed | `string` | `""` | no |
 
 ## Outputs
@@ -380,6 +381,20 @@ Available targets:
 | <a name="output_codepipeline_arn"></a> [codepipeline\_arn](#output\_codepipeline\_arn) | CodePipeline ARN |
 | <a name="output_codepipeline_id"></a> [codepipeline\_id](#output\_codepipeline\_id) | CodePipeline ID |
 <!-- markdownlint-restore -->
+
+
+
+## Share the Love
+
+Like this project? Please give it a ★ on [our GitHub](https://github.com/cloudposse/terraform-aws-cicd)! (it helps us **a lot**)
+
+Are you using this project or any of our other projects? Consider [leaving a testimonial][testimonial]. =)
+
+
+## Related Projects
+
+Check out these related projects.
+
 
 
 
