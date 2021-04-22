@@ -183,3 +183,9 @@ variable "website_bucket_name" {
   default     = ""
   description = "Name of the S3 bucket where the website will be deployed"
 }
+
+variable "website_bucket_acl" {
+  type        = string
+  default     = "public-read"
+  description = "Canned ACL of the S3 bucket objects that get served as a website, can be private if using CloudFront with OAI"
+}

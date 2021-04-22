@@ -125,6 +125,11 @@ resource "aws_iam_policy" "s3" {
   policy = join("", data.aws_iam_policy_document.s3.*.json)
 }
 
+data "aws_s3_bucket" "website" {
+  count  = local.enabled && var.website_bucket_name != "" ? 1 : 0
+  bucket = var.website_bucket_name
+}
+
 data "aws_iam_policy_document" "s3" {
   count = local.enabled ? 1 : 0
 
@@ -145,6 +150,28 @@ data "aws_iam_policy_document" "s3" {
     ]
 
     effect = "Allow"
+  }
+
+  dynamic "statement" {
+    for_each = var.website_bucket_name != "" ? ["true"] : []
+    content {
+      sid = ""
+
+      actions = [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:GetBucketVersioning",
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+      ]
+
+      resources = [
+        join("", data.aws_s3_bucket.website.*.arn),
+        "${join("", data.aws_s3_bucket.website.*.arn)}/*"
+      ]
+
+      effect = "Allow"
+    }
   }
 }
 
@@ -306,7 +333,7 @@ resource "aws_codepipeline" "default" {
         configuration = {
           BucketName = var.website_bucket_name
           Extract    = "true"
-          CannedACL  = "public-read"
+          CannedACL  = var.website_bucket_acl
         }
       }
     }
