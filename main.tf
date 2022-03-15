@@ -16,36 +16,71 @@ resource "aws_s3_bucket" "default" {
   #bridgecrew:skip=BC_AWS_S3_13:Skipping `Enable S3 Bucket Logging` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   #bridgecrew:skip=BC_AWS_S3_14:Skipping `Ensure all data stored in the S3 bucket is securely encrypted at rest` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   #bridgecrew:skip=CKV_AWS_52:Skipping `Ensure S3 bucket has MFA delete enabled` due to issue in terraform (https://github.com/hashicorp/terraform-provider-aws/issues/629).
-  count         = local.enabled ? 1 : 0
-  bucket        = module.this.id
-  acl           = "private"
+  count  = local.enabled ? 1 : 0
+  bucket = module.this.id
+  #acl           = "private"
   force_destroy = var.force_destroy
   tags          = module.this.tags
 
-  versioning {
-    enabled = var.versioning_enabled
-  }
+  # versioning {
+  #   enabled = var.versioning_enabled
+  # }
 
-  dynamic "logging" {
-    for_each = var.access_log_bucket_name != "" ? [1] : []
-    content {
-      target_bucket = var.access_log_bucket_name
-      target_prefix = "logs/${module.this.id}/"
+  # dynamic "logging" {
+  #   for_each = var.access_log_bucket_name != "" ? [1] : []
+  #   content {
+  #     target_bucket = var.access_log_bucket_name
+  #     target_prefix = "logs/${module.this.id}/"
+  #   }
+  # }
+
+  # dynamic "server_side_encryption_configuration" {
+  #   for_each = var.s3_bucket_encryption_enabled ? [1] : []
+
+  #   content {
+  #     rule {
+  #       apply_server_side_encryption_by_default {
+  #         sse_algorithm = "AES256"
+  #       }
+  #     }
+  #   }
+  # }
+
+}
+
+# S3 acl resource support for AWS provider V4
+resource "aws_s3_bucket_acl" "default" {
+  bucket = aws_s3_bucket.default.id
+  acl    = "private"
+}
+
+# S3 logging resource support for AWS provider v4
+resource "aws_s3_bucket_logging" "default" {
+  for_each = var.access_log_bucket_name != "" ? [1] : []
+  bucket   = aws_s3_bucket.default.id
+
+  target_bucket = var.access_log_bucket_name
+  target_prefix = "logs/${module.this.id}/"
+}
+
+# S3 versioning resource support for AWS provider v4
+resource "aws_s3_bucket_versioning" "default" {
+  bucket = aws_s3_bucket.default.id
+  versioning_configuration {
+    status = var.versioning_enabled ? "Enabled" : "Suspended"
+  }
+}
+
+# S3 server side encryption support for AWS provider v4
+resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
+  for_each = var.s3_bucket_encryption_enabled ? [1] : []
+  bucket   = aws_s3_bucket.default.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-
-  dynamic "server_side_encryption_configuration" {
-    for_each = var.s3_bucket_encryption_enabled ? [1] : []
-
-    content {
-      rule {
-        apply_server_side_encryption_by_default {
-          sse_algorithm = "AES256"
-        }
-      }
-    }
-  }
-
 }
 
 resource "aws_iam_role" "default" {
