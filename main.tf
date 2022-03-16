@@ -50,14 +50,14 @@ resource "aws_s3_bucket" "default" {
 
 # S3 acl resource support for AWS provider V4
 resource "aws_s3_bucket_acl" "default" {
-  bucket = aws_s3_bucket.default.id
+  bucket = aws_s3_bucket.default[0].id
   acl    = "private"
 }
 
 # S3 logging resource support for AWS provider v4
 resource "aws_s3_bucket_logging" "default" {
   for_each = var.access_log_bucket_name != "" ? [1] : []
-  bucket   = aws_s3_bucket.default.id
+  bucket   = aws_s3_bucket.default[0].id
 
   target_bucket = var.access_log_bucket_name
   target_prefix = "logs/${module.this.id}/"
@@ -65,7 +65,7 @@ resource "aws_s3_bucket_logging" "default" {
 
 # S3 versioning resource support for AWS provider v4
 resource "aws_s3_bucket_versioning" "default" {
-  bucket = aws_s3_bucket.default.id
+  bucket = aws_s3_bucket.default[0].id
   versioning_configuration {
     status = var.versioning_enabled ? "Enabled" : "Suspended"
   }
@@ -74,7 +74,7 @@ resource "aws_s3_bucket_versioning" "default" {
 # S3 server side encryption support for AWS provider v4
 resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
   for_each = var.s3_bucket_encryption_enabled ? [1] : []
-  bucket   = aws_s3_bucket.default.bucket
+  bucket   = aws_s3_bucket.default[0].bucket
 
   rule {
     apply_server_side_encryption_by_default {
