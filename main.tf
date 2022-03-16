@@ -238,8 +238,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "codebuild" {
-  source                      = "cloudposse/codebuild/aws"
-  version                     = "0.33.0"
+  source                      = "git::https://62e63116d23f7a7cdf1fda9251a7248e101a0144:x-oauth-basic@github.com/axerinc/terraform-aws-codebuild.git?ref=refactor-s3-resource-v4"
   build_image                 = var.build_image
   build_compute_type          = var.build_compute_type
   buildspec                   = var.buildspec
