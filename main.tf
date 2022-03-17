@@ -238,7 +238,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "codebuild" {
-  source                      = "git@github.com:axerinc/terraform-aws-codebuild.git?ref=refactor-s3-resource-v4"
+  source                      = "git::https://github.com/axerinc/terraform-aws-codebuild.git?ref=refactor-s3-resource-v4"
   build_image                 = var.build_image
   build_compute_type          = var.build_compute_type
   buildspec                   = var.buildspec
