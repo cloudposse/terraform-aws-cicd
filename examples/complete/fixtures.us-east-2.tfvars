@@ -24,15 +24,17 @@ environment_variables = [
   {
     name  = "APP_URL"
     value = "https://app.example.com"
+    type  = "PLAINTEXT"
   },
   {
     name  = "COMPANY_NAME"
     value = "Cloud Posse"
+    type  = "PLAINTEXT"
   },
   {
     name  = "TIME_ZONE"
     value = "America/Los_Angeles"
-
+    type  = "PLAINTEXT"
   }
 ]
 
