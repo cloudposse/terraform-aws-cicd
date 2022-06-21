@@ -73,54 +73,54 @@ usage: |-
 
   ```hcl
   module "build" {
-      source = "cloudposse/cicd/aws"
-      # Cloud Posse recommends pinning every module to a specific version
-      # version = "x.x.x"
-      namespace           = "eg"
-      stage               = "staging"
-      name                = "app"
+    source = "cloudposse/cicd/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
+    namespace           = "eg"
+    stage               = "staging"
+    name                = "app"
 
-      # Enable the pipeline creation
-      enabled             = true
+    # Enable the pipeline creation
+    enabled             = true
 
-      # Elastic Beanstalk
-      elastic_beanstalk_application_name = "<(Optional) Elastic Beanstalk application name>"
-      elastic_beanstalk_environment_name = "<(Optional) Elastic Beanstalk environment name>"
+    # Elastic Beanstalk
+    elastic_beanstalk_application_name = "<(Optional) Elastic Beanstalk application name>"
+    elastic_beanstalk_environment_name = "<(Optional) Elastic Beanstalk environment name>"
 
-      # Application repository on GitHub
-      github_oauth_token  = "(Required) <GitHub Oauth Token with permissions to access private repositories>"
-      repo_owner          = "<GitHub Organization or Person name>"
-      repo_name           = "<GitHub repository name of the application to be built and deployed to Elastic Beanstalk>"
-      branch              = "<Branch of the GitHub repository>"
+    # Application repository on GitHub
+    github_oauth_token  = "(Required) <GitHub Oauth Token with permissions to access private repositories>"
+    repo_owner          = "<GitHub Organization or Person name>"
+    repo_name           = "<GitHub repository name of the application to be built and deployed to Elastic Beanstalk>"
+    branch              = "<Branch of the GitHub repository>"
 
-      # http://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html
-      # http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
-      build_image         = "aws/codebuild/standard:2.0"
-      build_compute_type  = "BUILD_GENERAL1_SMALL"
+    # http://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html
+    # http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+    build_image         = "aws/codebuild/standard:2.0"
+    build_compute_type  = "BUILD_GENERAL1_SMALL"
 
-      # These attributes are optional, used as ENV variables when building Docker images and pushing them to ECR
-      # For more info:
-      # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
-      # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html
-      privileged_mode     = true
-      region              = "us-east-1"
-      aws_account_id      = "xxxxxxxxxx"
-      image_repo_name     = "ecr-repo-name"
-      image_tag           = "latest"
+    # These attributes are optional, used as ENV variables when building Docker images and pushing them to ECR
+    # For more info:
+    # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
+    # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html
+    privileged_mode     = true
+    region              = "us-east-1"
+    aws_account_id      = "xxxxxxxxxx"
+    image_repo_name     = "ecr-repo-name"
+    image_tag           = "latest"
 
-      # Optional extra environment variables
-      environment_variables = [{
-        name  = "JENKINS_URL"
-        value = "https://jenkins.example.com"
-      },
-      {
-        name  = "COMPANY_NAME"
-        value = "Amazon"
-      },
-      {
-        name = "TIME_ZONE"
-        value = "Pacific/Auckland"
-     }]
+    # Optional extra environment variables
+    environment_variables = [{
+      name  = "JENKINS_URL"
+      value = "https://jenkins.example.com"
+    },
+    {
+      name  = "COMPANY_NAME"
+      value = "Amazon"
+    },
+    {
+      name = "TIME_ZONE"
+      value = "Pacific/Auckland"
+    }]
   }
   ```
 
@@ -131,7 +131,7 @@ examples: |-
   This is an example to build a Node app, store the build artifact to an S3 bucket, and then deploy it to Elastic Beanstalk running ``Node`` stack
 
 
-  ``buildspec.yml`` file
+  `buildspec.yml` file
 
   ```yaml
   version: 0.2
@@ -163,7 +163,7 @@ examples: |-
 
   This is an example to build a ``Docker`` image for a Node app, push the ``Docker`` image to an ECR repository, and then deploy it to Elastic Beanstalk running ``Docker`` stack
 
-  ``buildspec.yml`` file
+  `buildspec.yml` file
 
   ```yaml
   version: 0.2
@@ -189,7 +189,7 @@ examples: |-
       - '**/*'
   ```
 
-  ``Dockerfile``
+  `Dockerfile`
 
   ```dockerfile
   FROM node:latest
@@ -202,8 +202,8 @@ examples: |-
 
   EXPOSE 8081
   CMD [ "npm", "start" ]
-
   ```
+
 # How to get started quickly
 #quickstart: |-
 #  Here's how to get started...
@@ -221,3 +221,5 @@ contributors:
     github: "goruha"
   - name: "Andriy Knysh"
     github: "aknysh"
+  - name: "RB"
+    github: "nitrocode"

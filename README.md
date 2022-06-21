@@ -119,54 +119,54 @@ Include this repository as a module in your existing terraform code:
 
 ```hcl
 module "build" {
-    source = "cloudposse/cicd/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version = "x.x.x"
-    namespace           = "eg"
-    stage               = "staging"
-    name                = "app"
+  source = "cloudposse/cicd/aws"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
+  namespace           = "eg"
+  stage               = "staging"
+  name                = "app"
 
-    # Enable the pipeline creation
-    enabled             = true
+  # Enable the pipeline creation
+  enabled             = true
 
-    # Elastic Beanstalk
-    elastic_beanstalk_application_name = "<(Optional) Elastic Beanstalk application name>"
-    elastic_beanstalk_environment_name = "<(Optional) Elastic Beanstalk environment name>"
+  # Elastic Beanstalk
+  elastic_beanstalk_application_name = "<(Optional) Elastic Beanstalk application name>"
+  elastic_beanstalk_environment_name = "<(Optional) Elastic Beanstalk environment name>"
 
-    # Application repository on GitHub
-    github_oauth_token  = "(Required) <GitHub Oauth Token with permissions to access private repositories>"
-    repo_owner          = "<GitHub Organization or Person name>"
-    repo_name           = "<GitHub repository name of the application to be built and deployed to Elastic Beanstalk>"
-    branch              = "<Branch of the GitHub repository>"
+  # Application repository on GitHub
+  github_oauth_token  = "(Required) <GitHub Oauth Token with permissions to access private repositories>"
+  repo_owner          = "<GitHub Organization or Person name>"
+  repo_name           = "<GitHub repository name of the application to be built and deployed to Elastic Beanstalk>"
+  branch              = "<Branch of the GitHub repository>"
 
-    # http://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html
-    # http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
-    build_image         = "aws/codebuild/standard:2.0"
-    build_compute_type  = "BUILD_GENERAL1_SMALL"
+  # http://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html
+  # http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+  build_image         = "aws/codebuild/standard:2.0"
+  build_compute_type  = "BUILD_GENERAL1_SMALL"
 
-    # These attributes are optional, used as ENV variables when building Docker images and pushing them to ECR
-    # For more info:
-    # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
-    # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html
-    privileged_mode     = true
-    region              = "us-east-1"
-    aws_account_id      = "xxxxxxxxxx"
-    image_repo_name     = "ecr-repo-name"
-    image_tag           = "latest"
+  # These attributes are optional, used as ENV variables when building Docker images and pushing them to ECR
+  # For more info:
+  # http://docs.aws.amazon.com/codebuild/latest/userguide/sample-docker.html
+  # https://www.terraform.io/docs/providers/aws/r/codebuild_project.html
+  privileged_mode     = true
+  region              = "us-east-1"
+  aws_account_id      = "xxxxxxxxxx"
+  image_repo_name     = "ecr-repo-name"
+  image_tag           = "latest"
 
-    # Optional extra environment variables
-    environment_variables = [{
-      name  = "JENKINS_URL"
-      value = "https://jenkins.example.com"
-    },
-    {
-      name  = "COMPANY_NAME"
-      value = "Amazon"
-    },
-    {
-      name = "TIME_ZONE"
-      value = "Pacific/Auckland"
-   }]
+  # Optional extra environment variables
+  environment_variables = [{
+    name  = "JENKINS_URL"
+    value = "https://jenkins.example.com"
+  },
+  {
+    name  = "COMPANY_NAME"
+    value = "Amazon"
+  },
+  {
+    name = "TIME_ZONE"
+    value = "Pacific/Auckland"
+  }]
 }
 ```
 
@@ -180,7 +180,7 @@ module "build" {
 This is an example to build a Node app, store the build artifact to an S3 bucket, and then deploy it to Elastic Beanstalk running ``Node`` stack
 
 
-``buildspec.yml`` file
+`buildspec.yml` file
 
 ```yaml
 version: 0.2
@@ -212,7 +212,7 @@ artifacts:
 
 This is an example to build a ``Docker`` image for a Node app, push the ``Docker`` image to an ECR repository, and then deploy it to Elastic Beanstalk running ``Docker`` stack
 
-``buildspec.yml`` file
+`buildspec.yml` file
 
 ```yaml
 version: 0.2
@@ -238,7 +238,7 @@ artifacts:
     - '**/*'
 ```
 
-``Dockerfile``
+`Dockerfile`
 
 ```dockerfile
 FROM node:latest
@@ -251,7 +251,6 @@ COPY . .
 
 EXPOSE 8081
 CMD [ "npm", "start" ]
-
 ```
 
 
@@ -288,7 +287,7 @@ Available targets:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_codebuild"></a> [codebuild](#module\_codebuild) | cloudposse/codebuild/aws | 0.33.0 |
+| <a name="module_codebuild"></a> [codebuild](#module\_codebuild) | cloudposse/codebuild/aws | 0.37.1 |
 | <a name="module_github_webhook"></a> [github\_webhook](#module\_github\_webhook) | cloudposse/repository-webhooks/github | 0.12.1 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
 
@@ -337,7 +336,7 @@ Available targets:
 | <a name="input_elastic_beanstalk_environment_name"></a> [elastic\_beanstalk\_environment\_name](#input\_elastic\_beanstalk\_environment\_name) | Elastic Beanstalk environment name. If not provided or set to empty string, the `Deploy` stage of the pipeline will not be created | `string` | `""` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | ID element. Usually used for region e.g. 'uw2', 'us-west-2', OR role 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
-| <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | A list of maps, that contain both the key 'name' and the key 'value' to be used as additional environment variables for the build | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>  }))</pre> | <pre>[<br>  {<br>    "name": "NO_ADDITIONAL_BUILD_VARS",<br>    "value": "TRUE"<br>  }<br>]</pre> | no |
+| <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | A list of maps, that contain the keys 'name', 'value', and 'type' to be used as additional environment variables for the build. Valid types are 'PLAINTEXT', 'PARAMETER\_STORE', or 'SECRETS\_MANAGER' | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>      type  = string<br>  }))</pre> | <pre>[<br>  {<br>    "name": "NO_ADDITIONAL_BUILD_VARS",<br>    "type": "PLAINTEXT",<br>    "value": "TRUE"<br>  }<br>]</pre> | no |
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | Force destroy the CI/CD S3 bucket even if it's not empty | `bool` | `false` | no |
 | <a name="input_github_oauth_token"></a> [github\_oauth\_token](#input\_github\_oauth\_token) | GitHub Oauth Token | `string` | n/a | yes |
 | <a name="input_github_webhook_events"></a> [github\_webhook\_events](#input\_github\_webhook\_events) | A list of events which should trigger the webhook. See a list of [available events](https://developer.github.com/v3/activity/events/types/) | `list(string)` | <pre>[<br>  "push"<br>]</pre> | no |
@@ -529,8 +528,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 ### Contributors
 
 <!-- markdownlint-disable -->
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] |
-|---|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![RB][nitrocode_avatar]][nitrocode_homepage]<br/>[RB][nitrocode_homepage] |
+|---|---|---|---|
 <!-- markdownlint-restore -->
 
   [osterman_homepage]: https://github.com/osterman
@@ -539,6 +538,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [goruha_avatar]: https://img.cloudposse.com/150x150/https://github.com/goruha.png
   [aknysh_homepage]: https://github.com/aknysh
   [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
+  [nitrocode_homepage]: https://github.com/nitrocode
+  [nitrocode_avatar]: https://img.cloudposse.com/150x150/https://github.com/nitrocode.png
 
 [![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]
