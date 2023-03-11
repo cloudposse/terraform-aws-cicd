@@ -204,7 +204,7 @@ data "aws_iam_policy_document" "codebuild" {
 
 module "codebuild" {
   source                      = "github.com/PharmacyMarketplace/terraform-aws-codebuild"
-  version                     = "1.0.0"
+#   version                     = "1.0.0"
   build_image                 = var.build_image
   build_compute_type          = var.build_compute_type
   buildspec                   = var.buildspec
