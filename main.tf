@@ -203,8 +203,8 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "codebuild" {
-  source                      = "github.com/PharmacyMarketplace/terraform-aws-codebuild"
-#   version                     = "1.0.0"
+  source                      = "cloudposse/codebuild/aws"
+  version                     = "1.0.0"
   build_image                 = var.build_image
   build_compute_type          = var.build_compute_type
   buildspec                   = var.buildspec
@@ -215,6 +215,7 @@ module "codebuild" {
   image_repo_name             = var.image_repo_name
   image_tag                   = var.image_tag
   github_token                = var.github_oauth_token
+  github_token_type           = "PLAINTEXT"
   environment_variables       = var.environment_variables
   cache_bucket_suffix_enabled = var.codebuild_cache_bucket_suffix_enabled
   cache_type                  = var.cache_type
