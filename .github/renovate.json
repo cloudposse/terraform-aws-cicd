@@ -13,5 +13,5 @@
     "commands": ["make readme"],
     "fileFilters": ["README.md"],
     "executionMode": "update"
-  }
+  } 
 }
