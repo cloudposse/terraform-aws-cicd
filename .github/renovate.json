@@ -12,5 +12,6 @@
   "postUpgradeTasks": {
     "commands": ["make readme"],
     "fileFilters": ["README.md"]
-  }
+  },
+  "masterIssue": true
 }
