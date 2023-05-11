@@ -8,5 +8,10 @@
   "enabledManagers": ["terraform"],
   "terraform": {
     "ignorePaths": ["**/context.tf", "examples/**"]
-  }
+  },
+  "postUpgradeTasks": {
+    "commands": ["make readme"],
+    "fileFilters": ["README.md"],
+    "executionMode": "update"
+  } 
 }
