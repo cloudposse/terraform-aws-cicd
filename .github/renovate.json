@@ -11,8 +11,8 @@
   },
   "postUpgradeTasks": {
     "commands": ["make readme"],
-    "fileFilters": ["README.md"]
+    "fileFilters": ["README.md"],
+    "executionMode": "update"
   },
-  "masterIssue": true,
   "dependencyDashboard": true
 }
