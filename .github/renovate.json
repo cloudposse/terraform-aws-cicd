@@ -3,16 +3,11 @@
     "config:base",
     ":preserveSemverRanges"
   ],
+  "baseBranches": ["main", "master", "/^release\\/v\\d{1,2}$/"],
   "labels": ["auto-update"],
   "dependencyDashboardAutoclose": true,
   "enabledManagers": ["terraform"],
   "terraform": {
     "ignorePaths": ["**/context.tf", "examples/**"]
-  },
-  "postUpgradeTasks": {
-    "commands": ["make readme"],
-    "fileFilters": ["README.md"],
-    "executionMode": "update"
-  },
-  "dependencyDashboard": true
+  }
 }
