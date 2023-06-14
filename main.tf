@@ -8,8 +8,8 @@ locals {
   enabled         = module.this.enabled
   webhook_enabled = local.enabled && var.webhook_enabled ? true : false
   webhook_count   = local.webhook_enabled ? 1 : 0
-  webhook_secret  = join("", random_password.webhook_secret.*.result)
-  webhook_url     = join("", aws_codepipeline_webhook.default.*.url)
+  webhook_secret  = join("", random_password.webhook_secret[*].result)
+  webhook_url     = join("", aws_codepipeline_webhook.default[*].url)
 }
 
 resource "aws_s3_bucket" "default" {
@@ -51,7 +51,7 @@ resource "aws_s3_bucket" "default" {
 resource "aws_iam_role" "default" {
   count              = local.enabled ? 1 : 0
   name               = module.this.id
-  assume_role_policy = join("", data.aws_iam_policy_document.assume.*.json)
+  assume_role_policy = join("", data.aws_iam_policy_document.assume[*].json)
   tags               = module.this.tags
 }
 
@@ -76,14 +76,14 @@ data "aws_iam_policy_document" "assume" {
 
 resource "aws_iam_role_policy_attachment" "default" {
   count      = local.enabled ? 1 : 0
-  role       = join("", aws_iam_role.default.*.id)
-  policy_arn = join("", aws_iam_policy.default.*.arn)
+  role       = join("", aws_iam_role.default[*].id)
+  policy_arn = join("", aws_iam_policy.default[*].arn)
 }
 
 resource "aws_iam_policy" "default" {
   count  = local.enabled ? 1 : 0
   name   = module.this.id
-  policy = join("", data.aws_iam_policy_document.default.*.json)
+  policy = join("", data.aws_iam_policy_document.default[*].json)
 }
 
 data "aws_iam_policy_document" "default" {
@@ -115,14 +115,14 @@ data "aws_iam_policy_document" "default" {
 
 resource "aws_iam_role_policy_attachment" "s3" {
   count      = local.enabled ? 1 : 0
-  role       = join("", aws_iam_role.default.*.id)
-  policy_arn = join("", aws_iam_policy.s3.*.arn)
+  role       = join("", aws_iam_role.default[*].id)
+  policy_arn = join("", aws_iam_policy.s3[*].arn)
 }
 
 resource "aws_iam_policy" "s3" {
   count  = local.enabled ? 1 : 0
   name   = "${module.this.id}-s3"
-  policy = join("", data.aws_iam_policy_document.s3.*.json)
+  policy = join("", data.aws_iam_policy_document.s3[*].json)
 }
 
 data "aws_s3_bucket" "website" {
@@ -144,8 +144,8 @@ data "aws_iam_policy_document" "s3" {
     ]
 
     resources = [
-      join("", aws_s3_bucket.default.*.arn),
-      "${join("", aws_s3_bucket.default.*.arn)}/*",
+      join("", aws_s3_bucket.default[*].arn),
+      "${join("", aws_s3_bucket.default[*].arn)}/*",
       "arn:aws:s3:::elasticbeanstalk*"
     ]
 
@@ -166,8 +166,8 @@ data "aws_iam_policy_document" "s3" {
       ]
 
       resources = [
-        join("", data.aws_s3_bucket.website.*.arn),
-        "${join("", data.aws_s3_bucket.website.*.arn)}/*"
+        join("", data.aws_s3_bucket.website[*].arn),
+        "${join("", data.aws_s3_bucket.website[*].arn)}/*"
       ]
 
       effect = "Allow"
@@ -177,14 +177,14 @@ data "aws_iam_policy_document" "s3" {
 
 resource "aws_iam_role_policy_attachment" "codebuild" {
   count      = local.enabled ? 1 : 0
-  role       = join("", aws_iam_role.default.*.id)
-  policy_arn = join("", aws_iam_policy.codebuild.*.arn)
+  role       = join("", aws_iam_role.default[*].id)
+  policy_arn = join("", aws_iam_policy.codebuild[*].arn)
 }
 
 resource "aws_iam_policy" "codebuild" {
   count  = local.enabled ? 1 : 0
   name   = "${module.this.id}-codebuild"
-  policy = join("", data.aws_iam_policy_document.codebuild.*.json)
+  policy = join("", data.aws_iam_policy_document.codebuild[*].json)
 }
 
 data "aws_iam_policy_document" "codebuild" {
@@ -226,7 +226,7 @@ module "codebuild" {
 resource "aws_iam_role_policy_attachment" "codebuild_s3" {
   count      = local.enabled ? 1 : 0
   role       = module.codebuild.role_id
-  policy_arn = join("", aws_iam_policy.s3.*.arn)
+  policy_arn = join("", aws_iam_policy.s3[*].arn)
 }
 
 # Only one of the `aws_codepipeline` resources below will be created:
@@ -249,11 +249,11 @@ resource "aws_codepipeline" "default" {
   # Elastic Beanstalk application name and environment name are specified
   count    = local.enabled ? 1 : 0
   name     = module.this.id
-  role_arn = join("", aws_iam_role.default.*.arn)
+  role_arn = join("", aws_iam_role.default[*].arn)
   tags     = module.this.tags
 
   artifact_store {
-    location = join("", aws_s3_bucket.default.*.bucket)
+    location = join("", aws_s3_bucket.default[*].bucket)
     type     = "S3"
   }
 
@@ -354,7 +354,7 @@ resource "aws_codepipeline_webhook" "default" {
   name            = module.this.id
   authentication  = var.webhook_authentication
   target_action   = var.webhook_target_action
-  target_pipeline = join("", aws_codepipeline.default.*.name)
+  target_pipeline = join("", aws_codepipeline.default[*].name)
 
   authentication_configuration {
     secret_token = local.webhook_secret
