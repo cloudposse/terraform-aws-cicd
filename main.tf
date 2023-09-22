@@ -21,7 +21,6 @@ resource "aws_s3_bucket" "default" {
   acl           = "private"
   force_destroy = var.force_destroy
   tags          = module.this.tags
-  block_public_acls = true
 
   versioning {
     enabled = var.versioning_enabled
