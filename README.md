@@ -277,7 +277,7 @@ Available targets:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_codebuild"></a> [codebuild](#module\_codebuild) | cloudposse/codebuild/aws | 1.0.0 |
+| <a name="module_codebuild"></a> [codebuild](#module\_codebuild) | cloudposse/codebuild/aws | 2.0.1 |
 | <a name="module_github_webhook"></a> [github\_webhook](#module\_github\_webhook) | cloudposse/repository-webhooks/github | 0.12.1 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
 
