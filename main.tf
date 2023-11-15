@@ -368,7 +368,7 @@ resource "aws_codepipeline_webhook" "default" {
 
 module "github_webhook" {
   source  = "cloudposse/repository-webhooks/github"
-  version = "0.12.1"
+  version = "0.14.0"
 
   enabled              = local.webhook_enabled
   github_organization  = var.repo_owner
