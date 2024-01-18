@@ -10,7 +10,6 @@ on:
       - 'docs/**'
       - 'examples/**'
       - 'test/**'
-      - 'README.*'
 
 permissions:
   contents: write

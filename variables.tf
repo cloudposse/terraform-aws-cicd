@@ -10,6 +10,11 @@ variable "elastic_beanstalk_environment_name" {
   description = "Elastic Beanstalk environment name. If not provided or set to empty string, the ``Deploy`` stage of the pipeline will not be created"
 }
 
+variable "codestar_connection_arn" {
+  type        = string
+  description = "The ARN of the connection to the GitHub repository."
+}
+
 variable "github_oauth_token" {
   type        = string
   description = "GitHub Oauth Token"

@@ -35,10 +35,10 @@ output "codebuild_badge_url" {
 
 output "codepipeline_id" {
   description = "CodePipeline ID"
-  value       = join("", aws_codepipeline.default[*].id)
+  value       = join("", aws_codepipeline.default.*.id)
 }
 
 output "codepipeline_arn" {
   description = "CodePipeline ARN"
-  value       = join("", aws_codepipeline.default[*].arn)
+  value       = join("", aws_codepipeline.default.*.arn)
 }
