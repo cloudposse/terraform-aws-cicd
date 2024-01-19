@@ -15,23 +15,6 @@ variable "codestar_connection_arn" {
   description = "The ARN of the connection to the GitHub repository."
 }
 
-variable "github_oauth_token" {
-  type        = string
-  description = "GitHub Oauth Token"
-}
-
-variable "github_webhooks_token" {
-  type        = string
-  default     = ""
-  description = "GitHub OAuth Token with permissions to create webhooks. If not provided, can be sourced from the `GITHUB_TOKEN` environment variable"
-}
-
-variable "github_webhook_events" {
-  type        = list(string)
-  description = "A list of events which should trigger the webhook. See a list of [available events](https://developer.github.com/v3/activity/events/types/)"
-  default     = ["push"]
-}
-
 variable "repo_owner" {
   type        = string
   description = "GitHub Organization or Person name"
@@ -45,36 +28,6 @@ variable "repo_name" {
 variable "branch" {
   type        = string
   description = "Branch of the GitHub repository, _e.g._ `master`"
-}
-
-variable "webhook_enabled" {
-  type        = bool
-  description = "Set to false to prevent the module from creating any webhook resources"
-  default     = false
-}
-
-variable "webhook_target_action" {
-  type        = string
-  description = "The name of the action in a pipeline you want to connect to the webhook. The action must be from the source (first) stage of the pipeline"
-  default     = "Source"
-}
-
-variable "webhook_authentication" {
-  type        = string
-  description = "The type of authentication to use. One of IP, GITHUB_HMAC, or UNAUTHENTICATED"
-  default     = "GITHUB_HMAC"
-}
-
-variable "webhook_filter_json_path" {
-  type        = string
-  description = "The JSON path to filter on"
-  default     = "$.ref"
-}
-
-variable "webhook_filter_match_equals" {
-  type        = string
-  description = "The value to match on (e.g. refs/heads/{Branch})"
-  default     = "refs/heads/{Branch}"
 }
 
 variable "build_image" {
@@ -93,12 +46,6 @@ variable "buildspec" {
   type        = string
   default     = ""
   description = " Declaration to use for building the project. [For more info](http://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html)"
-}
-
-variable "poll_source_changes" {
-  type        = bool
-  default     = true
-  description = "Periodically check the location of your source content and run the pipeline if changes are detected"
 }
 
 variable "privileged_mode" {
