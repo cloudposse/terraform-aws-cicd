@@ -1,0 +1,5 @@
+# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
+_extends: .github
+repository:
+  name: terraform-aws-cicd
+  description: Terraform Module for CI/CD with AWS Code Pipeline and Code Build
